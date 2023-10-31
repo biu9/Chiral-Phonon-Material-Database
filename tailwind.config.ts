@@ -16,7 +16,13 @@ const config: Config = {
       flexGrow: {
         2: '2',
         3: '3',
-      }
+      },
+      gridTemplateColumns: {
+        '18': 'repeat(18, minmax(0, 1fr))',
+      },
+      gridTemplateRows:{
+        '9': 'repeat(9, minmax(0, 1fr))',
+      },
     },
   },
   plugins: [],
