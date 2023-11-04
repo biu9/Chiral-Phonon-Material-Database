@@ -1,8 +1,11 @@
+'use client'
 import SideBar from "@/components/SideBar";
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import ElementTable from "@/components/ElementTable/index";
+import AdvancedOtions from "@/components/AdvancdeOtions";
+import { useState } from 'react';
 
 const SearchBar = () => {
     return (
@@ -37,12 +40,24 @@ const SearchBar = () => {
 }
 
 export default function Result() {
+
+    const [isShowAdvanced, setIsShowAdvanced] = useState(false)
+
     return (
         <div className="flex">
             <SideBar />
             <div className="flex w-full flex-col">
                 <SearchBar />
-                <ElementTable />
+                <div className="px-6 pb-3 cursor-pointer" onClick={() => {
+                    setIsShowAdvanced(!isShowAdvanced)
+                }}>
+                    {
+                        isShowAdvanced ? 'Hide Advanced Search' : 'Show Advanced Search'
+                    }
+                </div>
+                {
+                    isShowAdvanced ? <AdvancedOtions /> :<ElementTable />
+                }
             </div>
         </div>
     )
