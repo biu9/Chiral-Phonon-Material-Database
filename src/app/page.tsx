@@ -55,9 +55,9 @@ const SearchBar = ({ containElements, setContainElements }:{ containElements:IEl
     }
 
     return (
-        <div className="p-6 w-full flex justify-between space-x-12 items-end">
-            <div className="grow-3">
-                <div className="flex justify-between">
+        <div className="p-6 w-full flex justify-between space-x-12 items-end flex-col lg:flex-row space-y-3">
+            <div className="lg:grow-3 w-full">
+                <div className="flex justify-between items-center">
                     <div>Compound Contains</div>
                     <div className="flex items-center">
                         <div>Only these elements</div>
@@ -66,19 +66,19 @@ const SearchBar = ({ containElements, setContainElements }:{ containElements:IEl
                 </div>
                 <TextField variant="outlined" size="small" fullWidth value={containValue} onChange={handleContainInput} onBlur={handleContainBlur}/>
             </div>
-            <div className="grow-2">
+            <div className="lg:grow-2 w-full">
                 <div className="flex justify-between">
                     Exclude
                 </div>
                 <TextField variant="outlined" size="small" fullWidth />
             </div>
-            <div className="grow-2">
+            <div className="lg:grow-2 w-full">
                 <div className="flex justify-between">
                     Exclude
                 </div>
                 <TextField variant="outlined" size="small" fullWidth />
             </div>
-            <div className="grow-2 bg-blue-600 text-white rounded-md">
+            <div className="lg:grow-2 w-full bg-blue-600 text-white rounded-md">
                 <Button variant="contained" fullWidth>Search</Button> 
             </div>
         </div>
