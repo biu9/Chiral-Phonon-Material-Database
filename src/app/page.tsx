@@ -74,7 +74,7 @@ const SearchBar = ({ containElements, setContainElements }:{ containElements:IEl
             </div>
             <div className="lg:grow-2 w-full">
                 <div className="flex justify-between">
-                    Exclude
+                    ICSD Number
                 </div>
                 <TextField variant="outlined" size="small" fullWidth />
             </div>
