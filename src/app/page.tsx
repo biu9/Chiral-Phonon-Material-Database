@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import ElementTable from "@/components/ElementTable/index";
 import AdvancedOtions from "@/components/AdvancdeOtions";
+import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useState,useEffect } from 'react';
 import { IElement } from '@/types';
 
@@ -29,6 +30,7 @@ function translate(containElements:IElement[]):string {
 const SearchBar = ({ containElements, setContainElements }:{ containElements:IElement[], setContainElements:Dispatch<SetStateAction<IElement[]>> }) => {
     
     const [containValue, setContainValue] = useState<string>('');
+    const router = useRouter();
 
     useEffect(() => {
         setContainValue(translate(containElements));
@@ -52,6 +54,10 @@ const SearchBar = ({ containElements, setContainElements }:{ containElements:IEl
             }
         }
         setContainElements(tmpArr);
+    }
+
+    const handleSearch = () => {
+        router.push(`/result/1`);
     }
 
     return (
@@ -79,7 +85,7 @@ const SearchBar = ({ containElements, setContainElements }:{ containElements:IEl
                 <TextField variant="outlined" size="small" fullWidth />
             </div>
             <div className="lg:grow-2 w-full bg-blue-600 text-white rounded-md">
-                <Button variant="contained" fullWidth>Search</Button> 
+                <Button variant="contained" fullWidth onClick={handleSearch}>Search</Button> 
             </div>
         </div>
     )
