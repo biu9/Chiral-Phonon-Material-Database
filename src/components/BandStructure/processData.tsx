@@ -27,7 +27,7 @@ class line {
     }
 }
 
-class band {
+export class band {
     lines:line[];
     constructor(points:Point[]) {
         this.lines = [];

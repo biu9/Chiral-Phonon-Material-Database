@@ -4,10 +4,11 @@ import { processData } from "./processData";
 import { Stage,Layer } from "react-konva";
 import Konva from 'konva';
 import { BandStructureProps } from "@/types";
+import { band } from "./processData";
 
 export default function BandStructure({ width, height, bandType }: BandStructureProps) {
     
-    const [processedData,setProcessedData] = useState<any>([]);
+    const [processedData,setProcessedData] = useState<band[]>([]);
     const [stageScale,setStageScale] = useState<number>(1);
     const [stageX,setStageX] = useState<number>(0);
     const [stageY,setStageY] = useState<number>(0);
@@ -58,7 +59,7 @@ export default function BandStructure({ width, height, bandType }: BandStructure
                 >
                     <Layer>
                         {
-                            processedData.map((band:any) => {
+                            processedData.map((band:band) => {
                                 return band.render();
                             })
                         }
