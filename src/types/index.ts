@@ -3,7 +3,7 @@ export interface IElement {
     number: number;
 }
 
-export type Point = [number, number, string];
+export type Point = [number, number, number, string];
 
 export enum bandType {
     'pam'=2,

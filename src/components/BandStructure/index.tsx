@@ -1,32 +1,62 @@
 'use client'
-import { useState,useEffect } from "react"
+import {useState, useEffect, memo} from "react"
 import { processData } from "./processData";
-import { Stage,Layer } from "react-konva";
+import { processAxis } from "./processAxis";
+import {Stage, Layer, Rect} from "react-konva";
 import Konva from 'konva';
 import { BandStructureProps } from "@/types";
+
+// @ts-ignore
+// eslint-disable-next-line react/display-name
+const BandsRenderer = memo(({ data }) => {
+    return (
+        <>
+            {
+                data.map((band:any) => {
+                    return band.render();
+                })
+            }
+        </>
+    );
+});
 
 export default function BandStructure({ width, height, bandType }: BandStructureProps) {
     
     const [processedData,setProcessedData] = useState<any>([]);
-    const [stageScale,setStageScale] = useState<number>(1);
-    const [stageX,setStageX] = useState<number>(0);
-    const [stageY,setStageY] = useState<number>(0);
+    const [xs, setXs] = useState<number[]>([]);
+    const [axis,setAxis] = useState<any>();
+    const [layerScale,setLayerScale] = useState<number>(1);
+    const [layerX,setLayerX] = useState<number>(0);
+    const [layerY,setLayerY] = useState<number>(0);
 
     useEffect(() => {
         fetch('/mock/data.txt')
             .then(res => res.text())
             .then(res => {
-                setProcessedData(processData(res,bandType,width,height));
+                const [band, xs] = processData(res,bandType,width,height, 0.9);
+                setProcessedData(band);
+                setXs(xs);
             })
     },[bandType,width,height]);
+
+    useEffect(() => {
+        fetch('/mock/signals.txt')
+            .then(res => res.text())
+            .then(res => {
+                setAxis(processAxis(xs, JSON.parse(res), width, height));
+            })
+    }, [xs, width, height]);
+
 
     const handleWheel = (e:Konva.KonvaEventObject<WheelEvent>) => {
         const scaleBy = 1.1;
         const stage = e.target.getStage();
-        if(stage === null) 
+        if(stage === null) {
             return;
+        }
+        const layer = stage.children[0];
 
-        const oldScale = stage.scaleX();
+        const oldScale = layer.scaleX();
 
         const pointPosition = {
             x: stage.getPointerPosition()?.x || 0,
@@ -34,14 +64,28 @@ export default function BandStructure({ width, height, bandType }: BandStructure
         };
 
         const mousePointTo = {
-            x: pointPosition.x / oldScale - stage.x() / oldScale,
-            y: pointPosition.y / oldScale - stage.y() / oldScale,
+            x: pointPosition.x / oldScale - layer.x() / oldScale,
+            y: pointPosition.y / oldScale - layer.y() / oldScale,
         };
-        const newScale = e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
-        setStageScale(newScale);
-        setStageX(-(mousePointTo.x - pointPosition.x / newScale) * newScale);
-        setStageY(-(mousePointTo.y - pointPosition.y / newScale) * newScale);
+        const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
+        const newX = -(mousePointTo.x - pointPosition.x / newScale) * newScale;
+        const newY = -(mousePointTo.y - pointPosition.y / newScale) * newScale;
+        setLayerScale(newScale);
+        setLayerX(newX);
+        setLayerY(newY);
+        if (axis === undefined) {
+            return;
+        }
+        axis.updateXs(newX, newY, newScale, newScale)
     }
+
+    const handleDrag = (e:Konva.KonvaEventObject<DragEvent>) => {
+        const newX = e.target.x();
+        const newY = e.target.y();
+        axis.updateXs(newX, newY, layerScale, layerScale);
+        setLayerX(newX);
+    }
+
 
     return (
         <div>
@@ -50,17 +94,29 @@ export default function BandStructure({ width, height, bandType }: BandStructure
                 <Stage
                     width={width}
                     height={height}
-                    scaleX={stageScale}
-                    scaleY={stageScale}
-                    x={stageX}
-                    y={stageY}
                     onWheel={handleWheel}
                 >
+                    <Layer
+                        draggable
+                        onDragMove={handleDrag}
+                        onDragEnd={handleDrag}
+                        x={layerX}
+                        y={layerY}
+                        scaleX={layerScale}
+                        scaleY={layerScale}>
+                        {/*@ts-ignore*/}
+                        <BandsRenderer data={processedData} />
+                        <Rect
+                            x={0}
+                            y={0}
+                            width={width}
+                            height={height}
+                            fill={"transparent"}
+                        />
+                    </Layer>
                     <Layer>
                         {
-                            processedData.map((band:any) => {
-                                return band.render();
-                            })
+                            axis?.render()
                         }
                     </Layer>
                 </Stage>
