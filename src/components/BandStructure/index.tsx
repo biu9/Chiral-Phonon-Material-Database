@@ -5,6 +5,7 @@ import { Stage,Layer } from "react-konva";
 import Konva from 'konva';
 import { BandStructureProps } from "@/types";
 import { band } from "./processData";
+import { GET } from "@/request";
 
 export default function BandStructure({ width, height, bandType }: BandStructureProps) {
     
@@ -14,11 +15,10 @@ export default function BandStructure({ width, height, bandType }: BandStructure
     const [stageY,setStageY] = useState<number>(0);
 
     useEffect(() => {
-        fetch('/mock/data.txt')
-            .then(res => res.text())
-            .then(res => {
-                setProcessedData(processData(res,bandType,width,height));
-            })
+       (async() => {
+        const res = await GET<string>('/mock/data.txt',true);
+        setProcessedData(processData(res,bandType,width,height));
+       })()
     },[bandType,width,height]);
 
     const handleWheel = (e:Konva.KonvaEventObject<WheelEvent>) => {
