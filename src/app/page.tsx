@@ -6,8 +6,9 @@ import Checkbox from '@mui/material/Checkbox';
 import ElementTable from "@/components/ElementTable/index";
 import AdvancedOtions from "@/components/AdvancdeOtions";
 import { useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction, useState,useEffect } from 'react';
+import { useState,useEffect } from 'react';
 import { IElement } from '@/types';
+import { SearchPropsProvider,useSearchProps,useSearchPropsDispatch } from "./searchPropsContext";
 
 /**
  * @description 将IElement[]形式的数组转化为'name1+number1 name2+number2'形式的字符串
@@ -27,14 +28,17 @@ function translate(containElements:IElement[]):string {
     return res;
 }
 
-const SearchBar = ({ containElements, setContainElements }:{ containElements:IElement[], setContainElements:Dispatch<SetStateAction<IElement[]>> }) => {
+const SearchBar = () => {
     
     const [containValue, setContainValue] = useState<string>('');
     const router = useRouter();
 
+    const searchProps = useSearchProps();
+    const setSearchProps = useSearchPropsDispatch();
+
     useEffect(() => {
-        setContainValue(translate(containElements));
-    },[containElements])
+        setContainValue(translate(searchProps.filter.elements));
+    },[searchProps.filter.elements])
 
     const handleContainInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setContainValue(event.target.value);
@@ -53,7 +57,16 @@ const SearchBar = ({ containElements, setContainElements }:{ containElements:IEl
                 });
             }
         }
-        setContainElements(tmpArr);
+        if(setSearchProps) {
+            setSearchProps({
+                ...searchProps,
+                filter: {
+                    ...searchProps.filter,
+                    elements: tmpArr
+                }
+
+            })
+        }
     }
 
     const handleSearch = () => {
@@ -94,25 +107,25 @@ const SearchBar = ({ containElements, setContainElements }:{ containElements:IEl
 export default function Result() {
 
     const [isShowAdvanced, setIsShowAdvanced] = useState(false)
-    const [containElements, setContainElements] = useState<IElement[]>([]);
-    const [excludeElements, setExcludeElements] = useState<IElement[]>([]);
 
     return (
-        <div className="flex">
-            <SideBar />
-            <div className="flex w-full flex-col">
-                <SearchBar containElements={containElements} setContainElements={setContainElements} />
-                <div className="px-6 pb-3 cursor-pointer" onClick={() => {
-                    setIsShowAdvanced(!isShowAdvanced)
-                }}>
+        <SearchPropsProvider >
+            <div className="flex">
+                <SideBar />
+                <div className="flex w-full flex-col">
+                    <SearchBar />
+                    <div className="px-6 pb-3 cursor-pointer" onClick={() => {
+                        setIsShowAdvanced(!isShowAdvanced)
+                    }}>
+                        {
+                            isShowAdvanced ? 'Hide Advanced Search' : 'Show Advanced Search'
+                        }
+                    </div>
                     {
-                        isShowAdvanced ? 'Hide Advanced Search' : 'Show Advanced Search'
+                        isShowAdvanced ? <AdvancedOtions /> :<ElementTable/>
                     }
                 </div>
-                {
-                    isShowAdvanced ? <AdvancedOtions /> :<ElementTable containElements={containElements} setContainElements={setContainElements}/>
-                }
             </div>
-        </div>
+        </SearchPropsProvider>
     )
 }

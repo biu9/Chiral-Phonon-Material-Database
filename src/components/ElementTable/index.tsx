@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from 'react'
 import { position } from './elementPostion'
 import { IElement } from '@/types';
+import { useSearchProps,useSearchPropsDispatch } from '@/app/searchPropsContext';
 
 const Element = ({ name,row,col,order,choosed,handleClick }:{ name: string,row: number,col: number,order: number,choosed:boolean,handleClick:(name:string)=>void }) => {
 
@@ -25,19 +26,36 @@ const Element = ({ name,row,col,order,choosed,handleClick }:{ name: string,row: 
   )
 }
 
-export default function ElementTable({ containElements, setContainElements }:{ containElements:IElement[], setContainElements:Dispatch<SetStateAction<IElement[]>> }) {
+export default function ElementTable() {
+
+  const searchProps = useSearchProps();
+  const containElements = searchProps.filter.elements;
+  const setSearchProps = useSearchPropsDispatch();
+
+  if(!setSearchProps) {
+    throw new Error('useSearchPropsDispatch must be used within a SearchPropsProvider');
+  }
 
   const handleClick = (name:string) => {
     const index = containElements.findIndex(element => element.name === name);
     if(index === -1) {
-      setContainElements(containElements.concat({
-        name: name,
-        number: 1
-      }));
+      setSearchProps({
+        ...searchProps,
+        filter: {
+          ...searchProps.filter,
+          elements: [...containElements,{ name: name,number: 1 }]
+        }
+      })
     } else {
       const tmpArr = [...containElements];
       tmpArr.splice(index,1);
-      setContainElements(tmpArr);
+      setSearchProps({
+        ...searchProps,
+        filter: {
+          ...searchProps.filter,
+          elements: tmpArr
+        }
+      })
     }
   }
 
