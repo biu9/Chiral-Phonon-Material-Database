@@ -49,6 +49,7 @@ export default function BandStructure({ width, height, bandType }: BandStructure
 
 
     const handleWheel = (e:Konva.KonvaEventObject<WheelEvent>) => {
+        e.evt.preventDefault();
         const scaleBy = 1.1;
         const stage = e.target.getStage();
         if(stage === null) {
@@ -115,9 +116,27 @@ export default function BandStructure({ width, height, bandType }: BandStructure
                         />
                     </Layer>
                     <Layer>
+                        <Rect
+                            x={0}
+                            y={height * 0.9}
+                            width={width}
+                            height={height * 0.1}
+                            fill={"white"}
+                        />
+                    </Layer>
+                    <Layer>
                         {
                             axis?.render()
                         }
+                    </Layer>
+                    <Layer>
+                        <Rect
+                            x={0}
+                            y={0}
+                            width={width * 0.1}
+                            height={height}
+                            fill={"white"}
+                        />
                     </Layer>
                 </Stage>
             </div>
