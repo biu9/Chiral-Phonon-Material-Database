@@ -1,8 +1,9 @@
 'use client'
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSearchResults,useSearchProps,useSearchPropsDispatch,useSearchResultsDispatch } from '@/app/searchPropsContext';
 import { SearchResults,SearchProps,SearchResult } from "@/types";
 import { POST } from '@/request';
+import { useRouter } from 'next/navigation';
 
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -11,6 +12,8 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 import IconButton from '@mui/material/IconButton';
 
 const TableItem = ({ data }:{ data:SearchResult }) => {
+
+  const router = useRouter();
 
   const compundTranslate = (compound:{ name:string,number:number }[]):string => {
     let res = '';
@@ -23,8 +26,12 @@ const TableItem = ({ data }:{ data:SearchResult }) => {
     return res;
   }
 
+  const handleCompoundClick = () => {
+    router.push(`/result/${data.compound_name}`);
+  }
+
   return (
-    <div className="flex border-gray-300 hover:bg-slate-100 border-x-1 border-t-1 py-2">
+    <div className="flex border-gray-300 hover:bg-slate-100 border-x-1 border-t-1 py-2 cursor-pointer" onClick={handleCompoundClick}>
       <div className="w-80 pl-2">{compundTranslate(data.compound)}</div>
       <div className="w-80">{data.symmetry}</div>
       <div className="flex-1">占位</div>
@@ -84,7 +91,11 @@ export function SearchResultTable() {
       <div>
         <strong> 3244 </strong>
         Entries found
-        <strong> H </strong>,showing:
+        <strong> 
+          {
+            searchProps.filter.elements.reduce((acc,cur) => acc+cur.name+cur.number+' ',' ')
+          } 
+        </strong>,showing:
       </div>
       <div className='shadow-lg'>
         <div className="flex">
