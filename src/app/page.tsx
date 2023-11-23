@@ -8,7 +8,10 @@ import AdvancedOtions from "@/components/AdvancdeOtions";
 import { useRouter } from 'next/navigation';
 import { useState,useEffect } from 'react';
 import { IElement } from '@/types';
-import { SearchPropsProvider,useSearchProps,useSearchPropsDispatch } from "./searchPropsContext";
+import { SearchPropsProvider,useSearchProps,useSearchPropsDispatch,useSearchResultsDispatch } from "./searchPropsContext";
+import { SearchResultTable } from "@/components/SearchResultTable";
+import { SearchResults,SearchProps } from "@/types";
+import { POST } from "@/request";
 
 /**
  * @description 将IElement[]形式的数组转化为'name1+number1 name2+number2'形式的字符串
@@ -35,6 +38,8 @@ const SearchBar = () => {
 
     const searchProps = useSearchProps();
     const setSearchProps = useSearchPropsDispatch();
+
+    const setSearchResults = useSearchResultsDispatch();
 
     useEffect(() => {
         setContainValue(translate(searchProps.filter.elements));
@@ -64,13 +69,15 @@ const SearchBar = () => {
                     ...searchProps.filter,
                     elements: tmpArr
                 }
-
             })
         }
     }
 
-    const handleSearch = () => {
-        router.push(`/result/1`);
+    const handleSearch = async () => {
+        const res = await POST<SearchProps,SearchResults>('search/result?apifoxToken=RpVbtDPqSo3cCqyGKHU6cKlkLWLM1iwd',searchProps);
+        if(setSearchResults) {
+            setSearchResults(res);
+        }
     }
 
     return (
@@ -124,6 +131,7 @@ export default function Result() {
                     {
                         isShowAdvanced ? <AdvancedOtions /> :<ElementTable/>
                     }
+                    <SearchResultTable />
                 </div>
             </div>
         </SearchPropsProvider>

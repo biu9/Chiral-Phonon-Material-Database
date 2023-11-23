@@ -23,6 +23,9 @@ const config: Config = {
       gridTemplateRows:{
         '9': 'repeat(9, minmax(0, 1fr))',
       },
+      borderWidth: {
+        1: '1px',
+      }
     },
   },
   plugins: [],
