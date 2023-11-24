@@ -27,7 +27,9 @@ const TableItem = ({ data }:{ data:SearchResult }) => {
   }
 
   const handleCompoundClick = () => {
-    router.push(`/result/${data.compound_name}`);
+    const params = new URLSearchParams();
+    params.set('data',JSON.stringify(data));
+    router.push(`/result/${data.compound_name}?${params.toString()}`);
   }
 
   return (

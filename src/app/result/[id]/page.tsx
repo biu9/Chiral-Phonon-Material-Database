@@ -4,10 +4,14 @@ import { useRouter } from "next/navigation"
 import Switch from '@mui/material/Switch'
 import BandStructure from "@/components/BandStructure"
 import { bandType } from "@/types"
+import { SearchResult } from "@/types"
+import { useSearchParams } from "next/navigation"
 
 const TopBar = () => {
 
     const router = useRouter();
+
+    const params = JSON.parse(useSearchParams().getAll('data')[0]) as SearchResult;
 
     const handleBack = () => {
         router.back();
@@ -25,15 +29,19 @@ const TopBar = () => {
             <div className="flex justify-center space-x-6">
                 <div>
                     <div>compound name</div>
-                    <div className="font-bold">H2</div>
+                    <div className="font-bold">{
+                        params.compound.map((item:{ name:string,number:number }) => {
+                            return `${item.name}${item.number}`
+                        }).join(' ')
+                    }</div>
                 </div>
                 <div>
                     <div>Symmetry Group</div>
-                    <div>194</div>
+                    <div>{params.symmetry}</div>
                 </div>
                 <div>
                     <div>Topological Status (Type):</div>
-                    <div>trivial (LCEBR)</div>
+                    <div>{params.type.chiral}</div>
                 </div>
             </div>
         </div>
@@ -41,11 +49,14 @@ const TopBar = () => {
 }
 
 const Container = () => {
+
+    const params = JSON.parse(useSearchParams().getAll('data')[0]) as SearchResult;
+
     return (
         <div className="flex flex-col space-y-6">
             <div className="flex justify-between text-3xl">
                 <div>Materials Data</div>
-                <div>ICDS: 107510</div>
+                <div>mp-ID: {params['mp-ID']}</div>
             </div>
             <div>
                 <BandStructure width={500} height={500} bandType={bandType.pam}/>
@@ -54,7 +65,8 @@ const Container = () => {
     )
 }
 
-export default function Result({ params }:{ params: { id: string } }) {
+export default function Result() {
+
     return (
         <div className="flex">
             <SideBar />
