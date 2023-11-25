@@ -1,28 +1,27 @@
 'use client'
-import {useState, useEffect, memo} from "react"
+import React, {useState, useEffect, memo} from "react"
 import { processData } from "./processData";
 import { processAxis } from "./processAxis";
 import {Stage, Layer, Rect} from "react-konva";
 import Konva from 'konva';
 import { BandStructureProps } from "@/types";
+import { band } from "./processData"
 
-// @ts-ignore
-// eslint-disable-next-line react/display-name
-const BandsRenderer = memo(({ data }) => {
+const BandsRenderer = memo<{data:band[]}>(props => {
     return (
         <>
             {
-                data.map((band:any) => {
+                props.data.map((band:any) => {
                     return band.render();
                 })
             }
         </>
     );
 });
+BandsRenderer.displayName = 'BandsRenderer';
 
 export default function BandStructure({ width, height, bandType }: BandStructureProps) {
-    
-    const [processedData,setProcessedData] = useState<any>([]);
+    const [processedData,setProcessedData] = useState<band[]>([]);
     const [xs, setXs] = useState<number[]>([]);
     const [axis,setAxis] = useState<any>();
     const [layerScale,setLayerScale] = useState<number>(1);
@@ -46,6 +45,11 @@ export default function BandStructure({ width, height, bandType }: BandStructure
                 setAxis(processAxis(xs, JSON.parse(res), width, height));
             })
     }, [xs, width, height]);
+
+
+    useEffect(() => {
+        axis?.updateXs(layerX, layerY, layerScale, layerScale)
+    }, [layerX, layerY, layerScale, axis]);
 
 
     const handleWheel = (e:Konva.KonvaEventObject<WheelEvent>) => {
@@ -74,16 +78,11 @@ export default function BandStructure({ width, height, bandType }: BandStructure
         setLayerScale(newScale);
         setLayerX(newX);
         setLayerY(newY);
-        if (axis === undefined) {
-            return;
-        }
-        axis.updateXs(newX, newY, newScale, newScale)
     }
 
     const handleDrag = (e:Konva.KonvaEventObject<DragEvent>) => {
         const newX = e.target.x();
         const newY = e.target.y();
-        axis.updateXs(newX, newY, layerScale, layerScale);
         setLayerX(newX);
     }
 
@@ -105,7 +104,6 @@ export default function BandStructure({ width, height, bandType }: BandStructure
                         y={layerY}
                         scaleX={layerScale}
                         scaleY={layerScale}>
-                        {/*@ts-ignore*/}
                         <BandsRenderer data={processedData} />
                         <Rect
                             x={0}

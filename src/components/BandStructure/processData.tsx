@@ -4,7 +4,7 @@ import { Point,bandType } from "@/types";
 import internal from "stream";
 import {line} from "./utils";
 
-class band {
+export class band {
     lines:line[];
     constructor(points:Point[]) {
         this.lines = [];
