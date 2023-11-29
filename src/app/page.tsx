@@ -12,6 +12,7 @@ import { SearchPropsProvider,useSearchProps,useSearchPropsDispatch,useSearchResu
 import { SearchResultTable } from "@/components/SearchResultTable";
 import { SearchResults,SearchProps } from "@/types";
 import { POST } from "@/request";
+import { SessionProvider } from 'next-auth/react'
 
 /**
  * @description 将IElement[]形式的数组转化为'name1+number1 name2+number2'形式的字符串
@@ -100,7 +101,7 @@ const SearchBar = () => {
             </div>
             <div className="lg:grow-2 w-full">
                 <div className="flex justify-between">
-                    ICSD Number
+                    mp-ID
                 </div>
                 <TextField variant="outlined" size="small" fullWidth />
             </div>
@@ -116,24 +117,26 @@ export default function Result() {
     const [isShowAdvanced, setIsShowAdvanced] = useState(false)
 
     return (
-        <SearchPropsProvider >
-            <div className="flex">
-                <SideBar />
-                <div className="flex w-full flex-col">
-                    <SearchBar />
-                    <div className="px-6 pb-3 cursor-pointer" onClick={() => {
-                        setIsShowAdvanced(!isShowAdvanced)
-                    }}>
+        <SessionProvider>
+            <SearchPropsProvider >
+                <div className="flex">
+                    <SideBar />
+                    <div className="flex w-full flex-col">
+                        <SearchBar />
+                        <div className="px-6 pb-3 cursor-pointer" onClick={() => {
+                            setIsShowAdvanced(!isShowAdvanced)
+                        }}>
+                            {
+                                isShowAdvanced ? 'Hide Advanced Search' : 'Show Advanced Search'
+                            }
+                        </div>
                         {
-                            isShowAdvanced ? 'Hide Advanced Search' : 'Show Advanced Search'
+                            isShowAdvanced ? <AdvancedOtions /> :<ElementTable/>
                         }
+                        <SearchResultTable />
                     </div>
-                    {
-                        isShowAdvanced ? <AdvancedOtions /> :<ElementTable/>
-                    }
-                    <SearchResultTable />
                 </div>
-            </div>
-        </SearchPropsProvider>
+            </SearchPropsProvider>
+        </SessionProvider>
     )
 }

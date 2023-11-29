@@ -10,12 +10,14 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import SearchIcon from '@mui/icons-material/Search';
 import InfoIcon from '@mui/icons-material/Info';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LoginIcon from '@mui/icons-material/Login';
 
-const drawerWidth = 240;
+import { useSession, signIn, signOut } from "next-auth/react"
+
+const drawerWidth = 360;
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -42,7 +44,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
-  padding: theme.spacing(0, 1),
+  padding: theme.spacing(0, 3),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
@@ -64,12 +66,45 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
+const UnLoggedIcon = () => {
+  return (
+    <div className='p-3 flex items-center space-x-5'>
+    <IconButton
+      onClick={() => signIn('github')}
+    >
+      <LoginIcon />
+    </IconButton>
+  </div>
+  )
+}
+
+const LoggedIcon = () => {
+
+  const { data: session, status } = useSession()
+  const userEmail = session?.user?.email
+
+  return (
+    <div className='p-3 flex items-center space-x-5'>
+      <IconButton
+        onClick={() => signOut()}
+      >
+        <LockOpenIcon />
+      </IconButton>
+      <div>
+        {userEmail}
+      </div>
+    </div>
+  )
+}
+
 export default function SideBar() {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = () => {
     setOpen(!open);
   }
+
+  const { data: session, status } = useSession()
 
   return (
     <Drawer variant="permanent" open={open} className='hidden lg:block'>
@@ -83,6 +118,10 @@ export default function SideBar() {
             <MenuIcon />
           </IconButton>
         </DrawerHeader>
+        <Divider />
+        {
+          status === 'authenticated' ? <LoggedIcon /> : <UnLoggedIcon />
+        }
         <Divider />
         <List>
           {['Search','Info'].map((text, index) => (
