@@ -6,6 +6,7 @@ import BandStructure from "@/components/BandStructure"
 import { bandType } from "@/types"
 import { SearchResult } from "@/types"
 import { useSearchParams } from "next/navigation"
+import { SessionProvider } from "next-auth/react"
 
 const TopBar = () => {
 
@@ -68,12 +69,14 @@ const Container = () => {
 export default function Result() {
 
     return (
-        <div className="flex">
-            <SideBar />
-            <div className="flex w-full flex-col p-6">
-                <TopBar />
-                <Container />
+        <SessionProvider>
+            <div className="flex">
+                <SideBar />
+                <div className="flex w-full flex-col p-6">
+                    <TopBar />
+                    <Container />
+                </div>
             </div>
-        </div>
+        </SessionProvider>
     )
 }

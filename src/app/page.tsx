@@ -12,7 +12,7 @@ import { SearchPropsProvider,useSearchProps,useSearchPropsDispatch,useSearchResu
 import { SearchResultTable } from "@/components/SearchResultTable";
 import { SearchResults,SearchProps } from "@/types";
 import { POST } from "@/request";
-import { SessionProvider } from 'next-auth/react'
+import { SessionProvider } from 'next-auth/react';
 
 /**
  * @description 将IElement[]形式的数组转化为'name1+number1 name2+number2'形式的字符串

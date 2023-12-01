@@ -14,8 +14,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import InfoIcon from '@mui/icons-material/Info';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LoginIcon from '@mui/icons-material/Login';
+import LoginModal from './LoginModal';
 
 import { useSession, signIn, signOut } from "next-auth/react"
+import Login from '@mui/icons-material/Login';
 
 const drawerWidth = 360;
 
@@ -66,14 +68,17 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-const UnLoggedIcon = () => {
+const UnLoggedIcon = ({ setOpen }:{ setOpen:React.Dispatch<React.SetStateAction<boolean>> }) => {
   return (
     <div className='p-3 flex items-center space-x-5'>
     <IconButton
-      onClick={() => signIn('github')}
+      onClick={() => {
+        setOpen(true)
+      }}
     >
       <LoginIcon />
     </IconButton>
+    <div>未登录</div>
   </div>
   )
 }
@@ -86,7 +91,9 @@ const LoggedIcon = () => {
   return (
     <div className='p-3 flex items-center space-x-5'>
       <IconButton
-        onClick={() => signOut()}
+        onClick={() => {
+          signOut()
+        }}
       >
         <LockOpenIcon />
       </IconButton>
@@ -99,6 +106,8 @@ const LoggedIcon = () => {
 
 export default function SideBar() {
   const [open, setOpen] = React.useState(false);
+
+  const [loginModalOpen, setLoginModalOpen] = React.useState(false);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -120,7 +129,7 @@ export default function SideBar() {
         </DrawerHeader>
         <Divider />
         {
-          status === 'authenticated' ? <LoggedIcon /> : <UnLoggedIcon />
+          status === 'authenticated' ? <LoggedIcon /> : <UnLoggedIcon setOpen={setLoginModalOpen}/>
         }
         <Divider />
         <List>
@@ -150,6 +159,7 @@ export default function SideBar() {
           ))}
         </List>
         <Divider />
+        <LoginModal open={loginModalOpen} setOpen={setLoginModalOpen} />
       </Drawer>
   );
 }
