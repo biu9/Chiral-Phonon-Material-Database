@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { WorkOS } from '@workos-inc/node';
-
-const { SignJWT } = require('jose')
+import { SignJWT } from 'jose';
 
 const secret = new Uint8Array(
   Buffer.from(process.env.JWT_SECRET_KEY || '', 'base64'),
