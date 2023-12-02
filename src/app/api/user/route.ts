@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 
 // Javascript Object Signing and Encryption (JOSE)
 // https://www.npmjs.com/package/jose
-const { jwtVerify } = require('jose');
+import { jwtVerify } from 'jose';
 
 // Get secret
 const secret = new Uint8Array(
@@ -11,7 +11,7 @@ const secret = new Uint8Array(
 );
 
 export async function GET() {
-  const token = cookies().get('token')?.value;
+  const token = cookies().get('token')?.value || '';
 
   // Verify the JWT signature
   let verifiedToken;
