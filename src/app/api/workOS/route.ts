@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { WorkOS } from '@workos-inc/node';
+import { redirectUri } from '@/conf/auth';
 
 const workos = new WorkOS(process.env.WORKOS_API_KEY);
 const clientId = process.env.WORKOS_CLIENT_ID || '';
@@ -11,7 +12,7 @@ export async function GET() {
     provider: 'authkit',
 
     // The callback URI AuthKit will redirect to after authentication
-    redirectUri: 'http://localhost:3000/api/authCallback',
+    redirectUri: redirectUri,
     clientId,
   });
 

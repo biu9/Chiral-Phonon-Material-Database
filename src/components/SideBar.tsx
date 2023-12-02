@@ -18,6 +18,8 @@ import LoginIcon from '@mui/icons-material/Login';
 import { WorkOS } from '@workos-inc/node';
 import { GET } from '@/request';
 
+import { redirectUri } from '@/conf/auth';
+
 const workos = new WorkOS(process.env.NEXT_PUBLIC_WORKOS_API_KEY);
 const clientId = process.env.NEXT_PUBLIC_WORKOS_CLIENT_ID as string;
 
@@ -74,7 +76,7 @@ const UnLoggedIcon = () => {
 
   const authorizationUrl = workos.userManagement.getAuthorizationUrl({
     provider: 'authkit',
-    redirectUri: 'http://localhost:3000/api/authCallback',
+    redirectUri: redirectUri,
     clientId,
   });
 
