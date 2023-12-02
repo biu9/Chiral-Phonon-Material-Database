@@ -14,10 +14,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import InfoIcon from '@mui/icons-material/Info';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LoginIcon from '@mui/icons-material/Login';
-import LoginModal from './LoginModal';
 
-import { useSession, signIn, signOut } from "next-auth/react"
-import Login from '@mui/icons-material/Login';
+import { WorkOS } from '@workos-inc/node';
+import { GET } from '@/request';
+
+const workos = new WorkOS(process.env.NEXT_PUBLIC_WORKOS_API_KEY);
+const clientId = process.env.NEXT_PUBLIC_WORKOS_CLIENT_ID as string;
 
 const drawerWidth = 360;
 
@@ -68,37 +70,40 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-const UnLoggedIcon = ({ setOpen }:{ setOpen:React.Dispatch<React.SetStateAction<boolean>> }) => {
+const UnLoggedIcon = () => {
+
+  const authorizationUrl = workos.userManagement.getAuthorizationUrl({
+    provider: 'authkit',
+    redirectUri: 'http://localhost:3000/api/authCallback',
+    clientId,
+  });
+
   return (
     <div className='p-3 flex items-center space-x-5'>
-    <IconButton
-      onClick={() => {
-        setOpen(true)
-      }}
-    >
-      <LoginIcon />
-    </IconButton>
+    <a href={authorizationUrl}>
+      <IconButton>
+        <LoginIcon />
+      </IconButton>
+    </a>
     <div>未登录</div>
   </div>
   )
 }
 
-const LoggedIcon = () => {
-
-  const { data: session, status } = useSession()
-  const userEmail = session?.user?.email
+const LoggedIcon = ({ user }:{ user:any }) => {
 
   return (
     <div className='p-3 flex items-center space-x-5'>
       <IconButton
         onClick={() => {
-          signOut()
+          GET('/api/signout')
+          // TODO: sync signout
         }}
       >
         <LockOpenIcon />
       </IconButton>
       <div>
-        {userEmail}
+        {user.email}
       </div>
     </div>
   )
@@ -106,14 +111,19 @@ const LoggedIcon = () => {
 
 export default function SideBar() {
   const [open, setOpen] = React.useState(false);
-
-  const [loginModalOpen, setLoginModalOpen] = React.useState(false);
+  const [userInfo,setUserInfo] = React.useState<any>(); // TODO: type
 
   const toggleDrawer = () => {
     setOpen(!open);
   }
 
-  const { data: session, status } = useSession()
+  React.useEffect(() => {
+    (async() => {
+      const userInfo = await GET('/api/user')
+      setUserInfo(userInfo)
+      console.log(userInfo)
+    })()
+  },[])
 
   return (
     <Drawer variant="permanent" open={open} className='hidden lg:block'>
@@ -129,7 +139,7 @@ export default function SideBar() {
         </DrawerHeader>
         <Divider />
         {
-          status === 'authenticated' ? <LoggedIcon /> : <UnLoggedIcon setOpen={setLoginModalOpen}/>
+          userInfo?.isAuthenticated ? <LoggedIcon user={userInfo.user}/> : <UnLoggedIcon />
         }
         <Divider />
         <List>
@@ -159,7 +169,6 @@ export default function SideBar() {
           ))}
         </List>
         <Divider />
-        <LoginModal open={loginModalOpen} setOpen={setLoginModalOpen} />
       </Drawer>
   );
 }
