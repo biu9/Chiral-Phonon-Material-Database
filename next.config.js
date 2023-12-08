@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: ['@mui/x-charts'],
   experimental: {
     appDir: true,
     esmExternals: "loose", // required to make Konva & react-konva work
