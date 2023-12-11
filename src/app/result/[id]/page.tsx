@@ -6,6 +6,9 @@ import BandStructure from "@/components/BandStructure"
 import { bandType } from "@/types"
 import { SearchResult } from "@/types"
 import { useSearchParams } from "next/navigation"
+import Crystallographic from "@/components/Crystallographic"
+import LatticeStructure from "@/components/LatticeStructure"
+import BrillouinZone from "@/components/BrillouinZone"
 
 const TopBar = () => {
 
@@ -59,7 +62,14 @@ const Container = () => {
                 <div>mp-ID: {params['mp-ID']}</div>
             </div>
             <div>
-                <BandStructure width={500} height={500} bandType={bandType.pam}/>
+                <div className="flex justify-between">
+                    <Crystallographic />
+                    <LatticeStructure />
+                    <BrillouinZone />
+                </div>
+                <div>
+                    <BandStructure width={800} height={800} bandType={bandType.pam}/>
+                </div>
             </div>
         </div>
     )
