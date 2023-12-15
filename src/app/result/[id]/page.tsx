@@ -7,7 +7,7 @@ import { bandType } from "@/types"
 import { SearchResult } from "@/types"
 import { useSearchParams } from "next/navigation"
 import Crystallographic from "@/components/Crystallographic"
-import LatticeStructure from "@/components/LatticeStructure"
+import LatticeStructure from "@/components/LatticeStructure/index.jsx"
 import BrillouinZone from "@/components/BrillouinZone"
 
 const TopBar = () => {
@@ -64,7 +64,7 @@ const Container = () => {
             <div>
                 <div className="flex justify-between">
                     <Crystallographic />
-                    <LatticeStructure />
+                    <LatticeStructure width={800} height={800} />
                     <BrillouinZone />
                 </div>
                 <div>

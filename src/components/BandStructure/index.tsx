@@ -47,9 +47,9 @@ export default function BandStructure({ width, height, bandType }: BandStructure
     }, [xs, width, height]);
 
 
-    useEffect(() => {
-        axis?.updateXs(layerX, layerY, layerScale, layerScale)
-    }, [layerX, layerY, layerScale, axis]);
+    // useEffect(() => {
+    //     axis?.updateXs(layerX, layerY, layerScale, layerScale)
+    // }, [layerX, layerY, layerScale, axis]);
 
 
     const handleWheel = (e:Konva.KonvaEventObject<WheelEvent>) => {
@@ -75,6 +75,7 @@ export default function BandStructure({ width, height, bandType }: BandStructure
         const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
         const newX = -(mousePointTo.x - pointPosition.x / newScale) * newScale;
         const newY = -(mousePointTo.y - pointPosition.y / newScale) * newScale;
+        axis?.updateXs(newX, newY, newScale, newScale)
         setLayerScale(newScale);
         setLayerX(newX);
         setLayerY(newY);
@@ -83,7 +84,9 @@ export default function BandStructure({ width, height, bandType }: BandStructure
     const handleDrag = (e:Konva.KonvaEventObject<DragEvent>) => {
         const newX = e.target.x();
         const newY = e.target.y();
+        axis?.updateXs(newX, newY, layerScale, layerScale)
         setLayerX(newX);
+        setLayerY(newY);
     }
 
 
@@ -98,6 +101,7 @@ export default function BandStructure({ width, height, bandType }: BandStructure
                 >
                     <Layer
                         draggable
+                        onDragStart={handleDrag}
                         onDragMove={handleDrag}
                         onDragEnd={handleDrag}
                         x={layerX}
@@ -111,15 +115,6 @@ export default function BandStructure({ width, height, bandType }: BandStructure
                             width={width}
                             height={height}
                             fill={"transparent"}
-                        />
-                    </Layer>
-                    <Layer>
-                        <Rect
-                            x={0}
-                            y={height * 0.9}
-                            width={width}
-                            height={height * 0.1}
-                            fill={"white"}
                         />
                     </Layer>
                     <Layer>
