@@ -59,3 +59,12 @@ export interface SearchProps {
     ordered: string,
     asc: boolean
 }
+
+export interface DOSdata {
+    xData: number[],
+    yData: {
+        label: string,
+        data: number[],
+        showMark?: boolean,
+    }[],
+}
