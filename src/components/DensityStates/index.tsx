@@ -13,6 +13,7 @@ export default function DensityStates({ width, height} : { width:number, height:
     }, []);
     return (
         <div>
+            <div className="text-xl">Density statees</div>
             <LineChart
                 width={width}
                 height={height}

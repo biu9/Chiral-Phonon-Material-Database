@@ -23,8 +23,14 @@ export default function LatticeStructure({width, height}) {
       }
   )
   return (
-      <canvas
-          ref={ref}
-          id="transformBallAndStick" style={{width: width, height: height}}></canvas>
+    <div className="flex flex-col">
+        <div>Latitude Strucrute</div>
+        <div className="border-grat-200 border-2">
+            <canvas
+            ref={ref}
+            id="transformBallAndStick" style={{width: width, height: height}}
+            />
+        </div>
+    </div>
   );
 }

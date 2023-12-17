@@ -9,6 +9,8 @@ import { useSearchParams } from "next/navigation"
 import Crystallographic from "@/components/Crystallographic"
 import LatticeStructure from "@/components/LatticeStructure/index.jsx"
 import BrillouinZone from "@/components/BrillouinZone"
+import DensityStates from "@/components/DensityStates"
+import { Description } from "@mui/icons-material"
 
 const TopBar = () => {
 
@@ -56,19 +58,20 @@ const Container = () => {
     const params = JSON.parse(useSearchParams().getAll('data')[0]) as SearchResult;
 
     return (
-        <div className="flex flex-col space-y-6">
+        <div className="flex flex-col space-y-6 px-20">
             <div className="flex justify-between text-3xl">
                 <div>Materials Data</div>
                 <div>mp-ID: {params['mp-ID']}</div>
             </div>
-            <div>
+            <div className="flex flex-col space-y-10">
                 <div className="flex justify-between">
                     <Crystallographic />
                     <LatticeStructure width={800} height={800} />
                     <BrillouinZone />
                 </div>
-                <div>
+                <div className="flex justify-between">
                     <BandStructure width={800} height={800} bandType={bandType.pam}/>
+                    <DensityStates width={800} height={800} />
                 </div>
             </div>
         </div>
