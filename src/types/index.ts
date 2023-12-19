@@ -1,3 +1,5 @@
+import {band} from "@/components/BandStructure/processData";
+
 export interface IElement {
     name: string;
     number: number;
@@ -68,3 +70,24 @@ export interface DOSdata {
         showMark?: boolean,
     }[],
 }
+
+export interface BandAxis {
+    xData?: number[],
+    yMin?: number,
+    yMax?: number,
+    signals: string[],
+    width: number,
+    height: number,
+    xScale: number,
+    yScale: number,
+    px: number,
+    py: number,
+}
+
+export interface BindData {
+    data: band[],
+    xData: number[],
+    yMin: number,
+    yMax: number,
+}
+

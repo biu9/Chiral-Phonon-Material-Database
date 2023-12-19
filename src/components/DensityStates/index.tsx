@@ -17,11 +17,15 @@ export default function DensityStates({ width, height} : { width:number, height:
             <LineChart
                 width={width}
                 height={height}
+                //todo: switch x and y axis
                 series={
                     DOSData?.yData || []
                 }
                 xAxis={
                     [{
+                        //todo: make this two be changed with BandStructure:yMin,yMax
+                        min: Math.min(...DOSData?.xData || []),
+                        max: Math.max(...DOSData?.xData || []),
                         data: DOSData?.xData
                     }]
                 }

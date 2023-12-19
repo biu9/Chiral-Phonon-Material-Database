@@ -1,6 +1,6 @@
 'use client'
 import { Group } from "react-konva";
-import { Point,bandType } from "@/types";
+import {Point, bandType, BindData} from "@/types";
 import {line} from "./utils";
 
 export class band {
@@ -32,7 +32,7 @@ export class band {
     }
 }
 
-export function processData(data:string,bandType:bandType,width:number,height:number, percentage:number): [band[], number[]] {
+export function processData(data:string,bandType:bandType,width:number,height:number, percentage:number): BindData {
     const lines = data.split('\n');
     lines.shift();
     let lineGroups:Point[][] = [];
@@ -102,5 +102,10 @@ export function processData(data:string,bandType:bandType,width:number,height:nu
     lineGroups = lineGroups.filter((group) => group.length > 0);
     const bands = lineGroups.map((group) => new band(group));
 
-    return [bands, xs]
+    return {
+        data: bands,
+        xData: xs,
+        yMin,
+        yMax,
+    }
 }

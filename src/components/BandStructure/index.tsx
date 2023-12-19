@@ -1,18 +1,18 @@
 'use client'
-import React, {useState, useEffect, memo} from "react"
+import React, {useState, useEffect, memo, useRef} from "react"
 import { processData } from "./processData";
-import { processAxis } from "./processAxis";
+import { GrayLines, AxisWithSignals } from "./processAxis";
 import {Stage, Layer, Rect} from "react-konva";
 import Konva from 'konva';
-import { BandStructureProps } from "@/types";
+import {BandStructureProps, bandType, BindData} from "@/types";
 import { band } from "./processData";
 import { GET } from "@/request";
 
-const BandsRenderer = memo<{data:band[]}>(props => {
+const BandsRenderer = memo<{data?:band[]}>(props => {
     return (
         <>
             {
-                props.data.map((band:any) => {
+                props.data?.map((band:any) => {
                     return band.render();
                 })
             }
@@ -21,37 +21,13 @@ const BandsRenderer = memo<{data:band[]}>(props => {
 });
 BandsRenderer.displayName = 'BandsRenderer';
 
-export default function BandStructure({ width, height, bandType }: BandStructureProps) {
-    const [processedData,setProcessedData] = useState<band[]>([]);
-    const [xs, setXs] = useState<number[]>([]);
-    const [axis,setAxis] = useState<any>();
+export default function BandStructure({width, height, bandType}: BandStructureProps) {
+    const [processedData,setProcessedData] = useState<BindData>();
+    const [signals,setSignals] = useState<string[]>([]);
+    const stageRef = React.useRef<Konva.Stage>(null);
     const [layerScale,setLayerScale] = useState<number>(1);
     const [layerX,setLayerX] = useState<number>(0);
     const [layerY,setLayerY] = useState<number>(0);
-
-    useEffect(() => {
-       (async() => {
-        const res = await GET<string>('/mock/data.txt',true);
-        const [band, xs] = processData(res,bandType,width,height, 0.9);
-        setProcessedData(band);
-        setXs(xs);
-       })()
-    },[bandType,width,height]);
-
-    useEffect(() => {
-        fetch('/mock/signals.txt')
-            .then(res => res.text())
-            .then(res => {
-                setAxis(processAxis(xs, JSON.parse(res), width, height));
-            })
-    }, [xs, width, height]);
-
-
-    // useEffect(() => {
-    //     axis?.updateXs(layerX, layerY, layerScale, layerScale)
-    // }, [layerX, layerY, layerScale, axis]);
-
-
     const handleWheel = (e:Konva.KonvaEventObject<WheelEvent>) => {
         e.evt.preventDefault();
         const scaleBy = 1.1;
@@ -73,9 +49,11 @@ export default function BandStructure({ width, height, bandType }: BandStructure
             y: pointPosition.y / oldScale - layer.y() / oldScale,
         };
         const newScale = e.evt.deltaY < 0 ? oldScale * scaleBy : oldScale / scaleBy;
+        if(newScale < 0.9) {
+            return;
+        }
         const newX = -(mousePointTo.x - pointPosition.x / newScale) * newScale;
         const newY = -(mousePointTo.y - pointPosition.y / newScale) * newScale;
-        axis?.updateXs(newX, newY, newScale, newScale)
         setLayerScale(newScale);
         setLayerX(newX);
         setLayerY(newY);
@@ -84,20 +62,48 @@ export default function BandStructure({ width, height, bandType }: BandStructure
     const handleDrag = (e:Konva.KonvaEventObject<DragEvent>) => {
         const newX = e.target.x();
         const newY = e.target.y();
-        axis?.updateXs(newX, newY, layerScale, layerScale)
         setLayerX(newX);
         setLayerY(newY);
     }
 
+    // useEffect(() => {
+    //     const stage = stageRef.current;
+    //     if(stage === null) {
+    //         return;
+    //     }
+    //     stage.setAbsolutePosition({
+    //         x: left,
+    //         y: top
+    //     })
+    // }, [left, top]);
+
+    useEffect(() => {
+        (async() => {
+            const res = await GET<string>('/mock/data.txt',true);
+            const bandData = processData(res,bandType,width,height, 0.9);
+            setProcessedData(bandData);
+        })()
+    },[bandType,width,height]);
+
+    useEffect(() => {
+        fetch('/mock/signals.txt')
+            .then(res => res.text())
+            .then(res => {
+                setSignals(JSON.parse(res));
+                // setAxis(processAxis(xs, JSON.parse(res), width, height));
+            })
+    }, []);
 
     return (
         <div>
             <div className="text-xl">Band Structure</div>
             <div>
+
                 <Stage
                     width={width}
                     height={height}
                     onWheel={handleWheel}
+                    ref={stageRef}
                 >
                     <Layer
                         draggable
@@ -108,7 +114,7 @@ export default function BandStructure({ width, height, bandType }: BandStructure
                         y={layerY}
                         scaleX={layerScale}
                         scaleY={layerScale}>
-                        <BandsRenderer data={processedData} />
+                        <BandsRenderer data={processedData?.data} />
                         <Rect
                             x={0}
                             y={0}
@@ -118,18 +124,26 @@ export default function BandStructure({ width, height, bandType }: BandStructure
                         />
                     </Layer>
                     <Layer>
-                        {
-                            axis?.render()
-                        }
+                        <GrayLines {...processedData} signals={signals} width={width} height={height} xScale={layerScale} yScale={layerScale} px={layerX} py={layerY} />
                     </Layer>
                     <Layer>
                         <Rect
                             x={0}
                             y={0}
-                            width={width * 0.1}
+                            width={width*0.1}
                             height={height}
                             fill={"white"}
                         />
+                        <Rect
+                            x={0}
+                            y={height*0.9}
+                            width={width}
+                            height={height*0.1}
+                            fill={"white"}
+                        />
+                    </Layer>
+                    <Layer>
+                        <AxisWithSignals {...processedData} signals={signals} width={width} height={height} xScale={layerScale} yScale={layerScale} px={layerX} py={layerY} />
                     </Layer>
                 </Stage>
             </div>
