@@ -14,9 +14,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import InfoIcon from '@mui/icons-material/Info';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LoginIcon from '@mui/icons-material/Login';
+import UploadIcon from '@mui/icons-material/Upload';
 
 import { WorkOS } from '@workos-inc/node';
 import { GET } from '@/request';
+
+import { useRouter } from 'next/navigation';
 
 import { redirectUri } from '@/conf/auth';
 
@@ -115,8 +118,14 @@ export default function SideBar() {
   const [open, setOpen] = React.useState(false);
   const [userInfo,setUserInfo] = React.useState<any>(); // TODO: type
 
+  const router = useRouter();
+
   const toggleDrawer = () => {
     setOpen(!open);
+  }
+
+  const navigateToUpload = () => {
+    router.push('/upload')
   }
 
   React.useEffect(() => {
@@ -171,6 +180,29 @@ export default function SideBar() {
           ))}
         </List>
         <Divider />
+        <List>
+          <ListItem disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+              onClick={navigateToUpload}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <UploadIcon />
+              </ListItemIcon>
+              <ListItemText primary='Upload' sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+        </List>
       </Drawer>
   );
 }

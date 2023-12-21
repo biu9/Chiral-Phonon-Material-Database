@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     code,
     clientId,
   });
-
+  
   // Cleanup params and redirect to homepage
   const url = req.nextUrl.clone();
   url.searchParams.delete('code');

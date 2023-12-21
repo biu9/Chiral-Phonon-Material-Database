@@ -74,10 +74,13 @@ const SearchBar = () => {
     }
 
     const handleSearch = async () => {
-        const res = await POST<SearchProps,SearchResults>('search/result?apifoxToken=RpVbtDPqSo3cCqyGKHU6cKlkLWLM1iwd',searchProps);
+        const res = await POST<SearchProps,SearchResults>('search/result',searchProps);
+        /*
         if(setSearchResults) {
             setSearchResults(res);
         }
+        */
+       console.log(res);
     }
 
     return (
