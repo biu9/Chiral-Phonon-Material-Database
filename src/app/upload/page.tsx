@@ -2,30 +2,21 @@
 import SideBar from "@/components/SideBar"
 import { useState } from "react"
 import { POST } from "@/request"
+import { concurrentControl } from "@/utils/concurrentControl"
 
-const processFile = (files:FileList) => {
-  return new Promise((resolve,reject) => {
-    const uploadBody:any = {};
-    let running = 0;
-    for(let i=0;i<files.length;i++) {
-      running++;
-      const reader = new FileReader()
-      reader.onload = function(event) {
-        const fileContent = event.target?.result || '';
-        let fileType = files[i].name.split('.')[1];
-        if(fileType.includes('proj')) {
-          fileType = fileType.split('proj')[0];
-        }
-        uploadBody[fileType] = fileContent
+import { processFiles } from "./processFiles"
 
-        running--;
-        if(running === 0) {
-          resolve(uploadBody);
-        }
-      };
-      reader.readAsText(files[i])
-    }    
-  })
+type uploadData = {
+  ID: string,
+  pam: boolean,
+  chiral: string,
+  data: {
+    poscar: string,
+    band: string,
+    dos: string,
+    nacdos: string,
+    cif: string
+  }
 }
 
 export default function Upload() {
@@ -39,21 +30,11 @@ export default function Upload() {
 
   const handleSubmit = async () => {
     if(files) {
-      const uploadBody = await processFile(files);
-      const tmp = files[0].name.split('.')[0].split('_')
-      const ID = tmp[0];
-      const pam = tmp[1].includes('a') ? false : true;
-      const chiral = tmp[2];
-      const postBody = {
-        data:uploadBody,
-        ID: ID,
-        pam: pam,
-        chiral: chiral,
-        soc: soc+''
-      }
+     const uploadBody = await processFiles(files);
+     console.log(uploadBody)
 
-      const res = await POST('upload',postBody);
-      console.log(res)
+      const requests = uploadBody.map(item => () => POST<uploadData[],undefined>('upload',[item]))
+      const res = await concurrentControl(requests,1);
     }
   }
 
