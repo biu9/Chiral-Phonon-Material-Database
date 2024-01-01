@@ -46,12 +46,6 @@ export default function BandStructure({ width, height, bandType }: BandStructure
             })
     }, [xs, width, height]);
 
-
-    // useEffect(() => {
-    //     axis?.updateXs(layerX, layerY, layerScale, layerScale)
-    // }, [layerX, layerY, layerScale, axis]);
-
-
     const handleWheel = (e:Konva.KonvaEventObject<WheelEvent>) => {
         e.evt.preventDefault();
         const scaleBy = 1.1;

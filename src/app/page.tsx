@@ -62,25 +62,18 @@ const SearchBar = () => {
                 });
             }
         }
-        if(setSearchProps) {
-            setSearchProps({
-                ...searchProps,
-                filter: {
-                    ...searchProps.filter,
-                    elements: tmpArr
-                }
-            })
-        }
+        setSearchProps({
+            ...searchProps,
+            filter: {
+                ...searchProps.filter,
+                elements: tmpArr
+            }
+        })
     }
 
     const handleSearch = async () => {
         const res = await POST<SearchProps,SearchResults>('search/result',searchProps);
-        /*
-        if(setSearchResults) {
-            setSearchResults(res);
-        }
-        */
-       console.log(res);
+        setSearchResults(res.data);
     }
 
     return (
@@ -105,7 +98,10 @@ const SearchBar = () => {
                 <div className="flex justify-between">
                     mp-ID
                 </div>
-                <TextField variant="outlined" size="small" fullWidth />
+                <TextField variant="outlined" size="small" fullWidth onChange={(e) => {
+                    const tmp = {...searchProps};
+                    tmp.filter['mp-ID'] = e.target.value;
+                }}/>
             </div>
             <div className="lg:grow-2 w-full bg-blue-600 text-white rounded-md">
                 <Button variant="contained" fullWidth onClick={handleSearch}>Search</Button> 

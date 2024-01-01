@@ -49,7 +49,7 @@ export interface SearchProps {
         }[],
         precisely: boolean,
         "mp-ID": string,
-        symmetry: number[],
+        symmetry?: number[],
         types: {
             chiral: 'chiral' | 'achiral',
         }[],
@@ -67,4 +67,9 @@ export interface DOSdata {
         data: number[],
         showMark?: boolean,
     }[],
+}
+
+export type generalResponse<T=any> = {
+    data: T,
+    errMsg: string
 }

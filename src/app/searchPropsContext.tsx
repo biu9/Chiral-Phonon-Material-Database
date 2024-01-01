@@ -7,12 +7,11 @@ const defaultSearchProps:SearchProps = {
       elementsExclude: [],
       precisely: false,
       "mp-ID": '',
-      symmetry: [],
       types: [],
       pam: false
   },
   page: 1,
-  ordered: '',
+  ordered: 'compoundname',
   asc: true
 }
 
@@ -21,9 +20,9 @@ const defaultSearchResults:SearchResults = {
 }
 
 const SearchContext = createContext<SearchProps>(defaultSearchProps);
-const SearchDispatchContext = createContext<Dispatch<SetStateAction<SearchProps>> | null>(null);
+const SearchDispatchContext = createContext<Dispatch<SetStateAction<SearchProps>>>(() => {});
 const SearchResultsContext = createContext<SearchResults>(defaultSearchResults);
-const SearchResultsDispatchContext = createContext<Dispatch<SetStateAction<SearchResults>> | null>(null);
+const SearchResultsDispatchContext = createContext<Dispatch<SetStateAction<SearchResults>>>(() => {});
 
 export function SearchPropsProvider({ children }:{ children:React.ReactNode }) {
 

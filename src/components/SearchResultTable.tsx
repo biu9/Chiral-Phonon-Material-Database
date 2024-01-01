@@ -1,6 +1,11 @@
 'use client'
 import { useState } from 'react';
-import { useSearchResults,useSearchProps,useSearchPropsDispatch,useSearchResultsDispatch } from '@/app/searchPropsContext';
+import { 
+  useSearchResults,
+  useSearchProps,
+  useSearchPropsDispatch,
+  useSearchResultsDispatch,
+} from '@/app/searchPropsContext';
 import { SearchResults,SearchProps,SearchResult } from "@/types";
 import { POST } from '@/request';
 import { useRouter } from 'next/navigation';
@@ -50,42 +55,36 @@ export function SearchResultTable() {
   const searchResults = useSearchResults();
   const searchProps = useSearchProps();
 
-  const search = async () => {
-    const res = await POST<SearchProps,SearchResults>('search/result?apifoxToken=RpVbtDPqSo3cCqyGKHU6cKlkLWLM1iwd',searchProps);
-    if(setSearchResults) {
-        setSearchResults(res);
-    }
-    console.log('res',res);
+  const search = async (props:SearchProps) => {
+    const res = await POST<SearchProps,SearchResults>('search/result',props);
+    setSearchResults(res.data);
   }
 
   const handleNextPage = () => {
-    if(setSearchProps) {
-      setSearchProps({
-        ...searchProps,
-        page: searchProps.page + 1
-      })
+    const tmp = {
+      ...searchProps,
+      page: searchProps.page + 1
     }
-    search();
+    setSearchProps(tmp)
+    search(tmp);
   }
 
   const handlePrevPage = () => {
-    if(setSearchProps) {
-      setSearchProps({
-        ...searchProps,
-        page: searchProps.page - 1 < 1 ? 1 : searchProps.page - 1
-      })
+    const tmp = {
+      ...searchProps,
+      page: searchProps.page - 1 < 1 ? 1 : searchProps.page - 1
     }
-    search();
+    setSearchProps(tmp)
+    search(tmp);
   }
 
   const handleFirstPage = () => {
-    if(setSearchProps) {
-      setSearchProps({
-        ...searchProps,
-        page: 1
-      })
+    const tmp = {
+      ...searchProps,
+      page: 1
     }
-    search();
+    setSearchProps(tmp)
+    search(tmp);
   }
 
   return (
@@ -102,13 +101,12 @@ export function SearchResultTable() {
       <div className='shadow-lg'>
         <div className="flex">
           <div className="w-80 cursor-pointer" onClick={async () => {
-            if(setSearchProps) {
-              setSearchProps({
-                ...searchProps,
-                asc: !compundAsc
-              })
+            const tmp = {
+              ...searchProps,
+              asc: !compundAsc
             }
-            search();
+            setSearchProps(tmp)
+            search(tmp);
             setCompoundAsc(!compundAsc);
           }}>
             {
@@ -120,7 +118,7 @@ export function SearchResultTable() {
           <div className="w-80">Type</div>
         </div>
         {
-          searchResults.results.map((item:SearchResult,index) => {
+          searchResults.results && searchResults.results.map((item:SearchResult,index) => {
             return <TableItem key={index} data={item} />
           })
         }
