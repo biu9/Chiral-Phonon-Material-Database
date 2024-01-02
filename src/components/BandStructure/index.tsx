@@ -8,6 +8,7 @@ import { BandStructureProps,SearchResult,materialResponse } from "@/types";
 import { band } from "./processData";
 import { GET } from "@/request";
 import { useSearchParams } from "next/navigation"
+import { useSOC } from "../MaterialPropsContext";
 
 const BandsRenderer = memo<{data:band[]}>(props => {
     return (
@@ -29,17 +30,18 @@ export default function BandStructure({ width, height, bandType }: BandStructure
     const [layerScale,setLayerScale] = useState<number>(1);
     const [layerX,setLayerX] = useState<number>(0);
     const [layerY,setLayerY] = useState<number>(0);
+    const SOC = useSOC();
 
     const params = JSON.parse(useSearchParams().getAll('data')[0]) as SearchResult;
 
     useEffect(() => {
        (async() => {
-        const res = await GET<materialResponse>(`material/band?id=${params.uuid}&SOC=0`);
+        const res = await GET<materialResponse>(`material/band?id=${params.uuid}&SOC=${SOC}`);
         const [band, xs] = processData(res.data.String,bandType,width,height, 0.9);
         setProcessedData(band);
         setXs(xs);
        })()
-    },[bandType, width, height, params.uuid]);
+    },[bandType, width, height, params.uuid,SOC]);
 
     useEffect(() => {
         fetch('/mock/signals.txt')

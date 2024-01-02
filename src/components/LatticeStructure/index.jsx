@@ -3,17 +3,19 @@
 import {useEffect, useRef} from "react";
 import { ChemDoodle } from './ChemDoodleWeb.js'
 import { useSearchParams } from "next/navigation"
+import { useSOC } from "../MaterialPropsContext";
 
 const SERVER = process.env.NEXT_PUBLIC_SERVER;
 
 export default function LatticeStructure({width, height}) {
   let ref = useRef();
 
-  const params = JSON.parse(useSearchParams().getAll('data')[0]) 
+  const params = JSON.parse(useSearchParams().getAll('data')[0])
+  const SOC = useSOC()
 
   useEffect(() => {
       (async() => {
-        const res = await fetch(SERVER+`material/cif?id=${params.uuid}&SOC=0`)
+        const res = await fetch(SERVER+`material/cif?id=${params.uuid}&SOC=${SOC}`)
         const data = await res.json()
 
         let canvas = ref.current;
@@ -26,8 +28,7 @@ export default function LatticeStructure({width, height}) {
         transformBallAndStick.loadContent([molecule.molecule],[molecule.unitCell])
         transformBallAndStick.repaint();
       })()
-    }
-  )
+  },[SOC, height, params.uuid, width])
   return (
     <div className="flex flex-col">
         <div>Latitude Strucrute</div>

@@ -8,7 +8,7 @@ import AdvancedOtions from "@/components/AdvancdeOtions";
 import { useRouter } from 'next/navigation';
 import { useState,useEffect } from 'react';
 import { IElement } from '@/types';
-import { SearchPropsProvider,useSearchProps,useSearchPropsDispatch,useSearchResultsDispatch } from "./searchPropsContext";
+import { SearchPropsProvider,useSearchProps,useSearchPropsDispatch,useSearchResultsDispatch } from "../components/searchPropsContext";
 import { SearchResultTable } from "@/components/SearchResultTable";
 import { SearchResults,SearchProps } from "@/types";
 import { POST } from "@/request";

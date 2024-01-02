@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react'
 import { position } from './elementPostion'
 import { IElement } from '@/types';
-import { useSearchProps,useSearchPropsDispatch } from '@/app/searchPropsContext';
+import { useSearchProps,useSearchPropsDispatch } from '@/components/searchPropsContext';
 
 const Element = ({ name,row,col,order,choosed,handleClick }:{ name: string,row: number,col: number,order: number,choosed:boolean,handleClick:(name:string)=>void }) => {
 

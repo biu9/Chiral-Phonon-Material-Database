@@ -11,11 +11,15 @@ import LatticeStructure from "@/components/LatticeStructure/index.jsx"
 import BrillouinZone from "@/components/BrillouinZone"
 import DensityStates from "@/components/DensityStates"
 
+import { MaterialProvider } from "@/components/MaterialPropsContext"
+import { useSOCDispatch,useSOC } from "@/components/MaterialPropsContext"
+
 const TopBar = () => {
 
     const router = useRouter();
-
     const params = JSON.parse(useSearchParams().getAll('data')[0]) as SearchResult;
+    const setSOC = useSOCDispatch();
+    const SOC = useSOC();
 
     const handleBack = () => {
         router.back();
@@ -26,7 +30,11 @@ const TopBar = () => {
             <div className="flex justify-between">
                 <div className="text-blue-600 hover:opacity-80 cursor-pointer" onClick={handleBack}>{'<'}back link</div>
                 <div className="flex items-center">
-                    <Switch />
+                    <Switch
+                        checked={SOC === 1}
+                        onChange={(e) => setSOC(SOC === 1 ? 0 : 1)}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                    />
                     with SOC
                 </div>
             </div>
@@ -80,12 +88,14 @@ const Container = () => {
 export default function Result() {
 
     return (
-        <div className="flex">
-            <SideBar />
-            <div className="flex w-full flex-col p-6">
-                <TopBar />
-                <Container />
+        <MaterialProvider>
+            <div className="flex">
+                <SideBar />
+                <div className="flex w-full flex-col p-6">
+                    <TopBar />
+                    <Container />
+                </div>
             </div>
-        </div>
+        </MaterialProvider>
     )
 }

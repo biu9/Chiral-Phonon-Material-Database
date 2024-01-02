@@ -5,7 +5,7 @@ import {
   useSearchProps,
   useSearchPropsDispatch,
   useSearchResultsDispatch,
-} from '@/app/searchPropsContext';
+} from '@/components/searchPropsContext';
 import { SearchResults,SearchProps,SearchResult } from "@/types";
 import { POST } from '@/request';
 import { useRouter } from 'next/navigation';
