@@ -26,6 +26,7 @@ export async function GET() {
     {
       isAuthenticated: true,
       user: verifiedToken.payload.user,
+      role: verifiedToken.payload.role,
     },
     { status: 200 },
   );

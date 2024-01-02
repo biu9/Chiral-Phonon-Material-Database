@@ -131,8 +131,7 @@ export default function SideBar() {
   React.useEffect(() => {
     (async() => {
       const userInfo = await GET('/api/user')
-      setUserInfo(userInfo)
-      console.log(userInfo)
+      setUserInfo(userInfo.data)
     })()
   },[])
 
@@ -182,25 +181,29 @@ export default function SideBar() {
         <Divider />
         <List>
           <ListItem disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-              onClick={navigateToUpload}
-            >
-              <ListItemIcon
+            {
+              userInfo && userInfo.role === 'admin' ? 
+              <ListItemButton
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
                 }}
+                onClick={navigateToUpload}
               >
-                <UploadIcon />
-              </ListItemIcon>
-              <ListItemText primary='Upload' sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <UploadIcon />
+                </ListItemIcon>
+                <ListItemText primary='Upload' sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton> :
+              null
+            }
           </ListItem>
         </List>
       </Drawer>

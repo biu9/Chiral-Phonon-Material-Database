@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { WorkOS } from '@workos-inc/node';
 import { SignJWT } from 'jose';
+import { adminEmail } from '@/conf/auth';
 
 const secret = new Uint8Array(
   Buffer.from(process.env.JWT_SECRET_KEY || '', 'base64'),
@@ -25,14 +26,17 @@ export async function GET(req: NextRequest) {
 
   const response = NextResponse.redirect(url);
 
+  const role = user.email === adminEmail ? 'admin' : 'user';
+
   // Create a JWT with the user's information
   const token = await new SignJWT({
     // Here you might lookup and retrieve user details from your database
     user,
+    role
   })
     .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
     .setIssuedAt()
-    .setExpirationTime('11h')
+    .setExpirationTime('2400h')
     .sign(secret);
 
   // Store in a cookie
