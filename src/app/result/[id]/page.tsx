@@ -40,11 +40,16 @@ const TopBar = () => {
             <div className="flex justify-center space-x-6">
                 <div>
                     <div>compound name</div>
-                    <div className="font-bold">{
-                        params.compound.map((item:{ name:string,number:number }) => {
-                            return `${item.name}${item.number}`
-                        }).join(' ')
-                    }</div>
+                    <div className="font-bold">
+                        {
+                            /*
+                            params.compound.map((item:{ name:string,number:number }) => {
+                                return `${item.name}${item.number}`
+                            }).join(' ')
+                            */
+                           params.compound_name
+                        }
+                    </div>
                 </div>
                 <div>
                     <div>Symmetry Group</div>

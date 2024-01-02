@@ -20,6 +20,7 @@ export interface BandStructureProps {
 
 export interface SearchResults {
     results: SearchResult[],
+    total: number
 }
 
 export interface SearchResult {

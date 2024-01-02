@@ -39,7 +39,7 @@ const TableItem = ({ data }:{ data:SearchResult }) => {
 
   return (
     <div className="flex border-gray-300 hover:bg-slate-100 border-x-1 border-t-1 py-2 cursor-pointer" onClick={handleCompoundClick}>
-      <div className="w-80 pl-2">{compundTranslate(data.compound)}</div>
+      <div className="w-80 pl-2">{data.compound_name}</div>
       <div className="w-80">{data.symmetry}</div>
       <div className="flex-1">占位</div>
       <div className="w-80">{data.type.chiral}</div>
@@ -63,7 +63,7 @@ export function SearchResultTable() {
   const handleNextPage = () => {
     const tmp = {
       ...searchProps,
-      page: searchProps.page + 1
+      page: searchProps.page + 1 > Math.ceil(searchResults.total / 20) ? Math.ceil(searchResults.total / 20) : searchProps.page + 1
     }
     setSearchProps(tmp)
     search(tmp);
@@ -90,7 +90,7 @@ export function SearchResultTable() {
   return (
     <div className="px-6 py-12">
       <div>
-        <strong> 3244 </strong>
+        <strong> {searchResults.total ? searchResults.total : 0} </strong>
         Entries found
         <strong> 
           {
@@ -124,7 +124,7 @@ export function SearchResultTable() {
         }
         <div className="w-full border-t-1"></div>
         <div className='px-2 py-3 border-1 shadow-lg border-gray-300 flex items-center justify-end pr-12'>
-          {(searchProps.page-1) * 20+1}-{searchProps.page * 20} of 100
+          {(searchProps.page-1) * 20+1}-{searchProps.page * 20} of {searchResults.total}
           <IconButton
             disabled={searchProps.page === 1}
             onClick={handleFirstPage}
@@ -139,6 +139,7 @@ export function SearchResultTable() {
           </IconButton>
           <IconButton
             onClick={handleNextPage}
+            disabled={searchProps.page === Math.ceil(searchResults.total / 20)}
           >
             <KeyboardArrowRight />
           </IconButton>
