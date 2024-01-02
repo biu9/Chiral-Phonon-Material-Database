@@ -3,10 +3,9 @@ import SideBar from "@/components/SideBar"
 import { useRouter } from "next/navigation"
 import Switch from '@mui/material/Switch'
 import BandStructure from "@/components/BandStructure"
-import { bandType } from "@/types"
-import { SearchResult } from "@/types"
+import { bandType,SearchResult } from "@/types"
 import { useSearchParams } from "next/navigation"
-import Crystallographic from "@/components/Crystallographic"
+import { Crystallographic } from "@/components/Crystallpgraphic"
 import LatticeStructure from "@/components/LatticeStructure/index.jsx"
 import BrillouinZone from "@/components/BrillouinZone"
 import DensityStates from "@/components/DensityStates"
@@ -73,7 +72,7 @@ const Container = () => {
             <div className="flex flex-col space-y-10">
                 <div className="flex justify-between">
                     <Crystallographic />
-                    <LatticeStructure width={800} height={800} />
+                    <LatticeStructure width={600} height={400} />
                     <BrillouinZone />
                 </div>
                 <div className="flex justify-between">
