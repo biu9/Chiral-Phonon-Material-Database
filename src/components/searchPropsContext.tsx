@@ -16,7 +16,8 @@ const defaultSearchProps:SearchProps = {
 }
 
 const defaultSearchResults:SearchResults = {
-  results: []
+  results: [],
+  total: 0
 }
 
 const SearchContext = createContext<SearchProps>(defaultSearchProps);
