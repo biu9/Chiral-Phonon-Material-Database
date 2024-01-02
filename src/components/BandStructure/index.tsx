@@ -4,9 +4,10 @@ import { processData } from "./processData";
 import { processAxis } from "./processAxis";
 import {Stage, Layer, Rect} from "react-konva";
 import Konva from 'konva';
-import { BandStructureProps } from "@/types";
+import { BandStructureProps,SearchResult,materialResponse } from "@/types";
 import { band } from "./processData";
 import { GET } from "@/request";
+import { useSearchParams } from "next/navigation"
 
 const BandsRenderer = memo<{data:band[]}>(props => {
     return (
@@ -29,14 +30,16 @@ export default function BandStructure({ width, height, bandType }: BandStructure
     const [layerX,setLayerX] = useState<number>(0);
     const [layerY,setLayerY] = useState<number>(0);
 
+    const params = JSON.parse(useSearchParams().getAll('data')[0]) as SearchResult;
+
     useEffect(() => {
        (async() => {
-        const res = await GET<string>('/mock/data.txt',true);
-        const [band, xs] = processData(res,bandType,width,height, 0.9);
+        const res = await GET<materialResponse>(`material/band?id=${params.uuid}&SOC=0`);
+        const [band, xs] = processData(res.data.String,bandType,width,height, 0.9);
         setProcessedData(band);
         setXs(xs);
        })()
-    },[bandType,width,height]);
+    },[bandType, width, height, params.uuid]);
 
     useEffect(() => {
         fetch('/mock/signals.txt')

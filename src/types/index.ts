@@ -73,3 +73,8 @@ export type generalResponse<T=any> = {
     data: T,
     errMsg: string
 }
+
+export type materialResponse = {
+    String: string,
+    valid: boolean
+}
