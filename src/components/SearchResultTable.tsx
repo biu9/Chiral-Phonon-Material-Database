@@ -41,7 +41,7 @@ const TableItem = ({ data }:{ data:SearchResult }) => {
     <div className="flex border-gray-300 hover:bg-slate-100 border-x-1 border-t-1 py-2 cursor-pointer" onClick={handleCompoundClick}>
       <div className="w-80 pl-2">{data.compound_name}</div>
       <div className="w-80">{data.symmetry}</div>
-      <div className="flex-1">占位</div>
+      <div className="flex-1"></div>
       <div className="w-80">{data.type.chiral}</div>
     </div>
   )
@@ -114,7 +114,7 @@ export function SearchResultTable() {
             }
           </div>
           <div className="w-80">Symmetry Group</div>
-          <div className="flex-1">占位</div>
+          <div className="flex-1"></div>
           <div className="w-80">Type</div>
         </div>
         {

@@ -34,6 +34,8 @@ function translate(containElements:IElement[]):string {
 const SearchBar = () => {
     
     const [containValue, setContainValue] = useState<string>('');
+    const [excludeValue, setExcludeValue] = useState<string>('');
+    const [only, setOnly] = useState<boolean>(false); // 是否只包含containValue中的元素
     const router = useRouter();
 
     const searchProps = useSearchProps();
@@ -43,14 +45,42 @@ const SearchBar = () => {
 
     useEffect(() => {
         setContainValue(translate(searchProps.filter.elements));
-    },[searchProps.filter.elements])
+        setExcludeValue(translate(searchProps.filter.elementsExclude));
+    },[searchProps.filter.elements, searchProps.filter.elementsExclude])
 
     const handleContainInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setContainValue(event.target.value);
     }
 
-    const handleContainBlur = () => {
-        const tmp = containValue.split(' ');
+    const handleExculdeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setExcludeValue(event.target.value);
+    }
+
+    const handleOnly = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setOnly(event.target.checked);
+        if(event.target.checked) {
+            setSearchProps({
+                ...searchProps,
+                filter: {
+                    ...searchProps.filter,
+                    precisely: event.target.checked
+                }
+            })
+        }
+    }
+
+    const handlempID = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchProps({
+            ...searchProps,
+            filter: {
+                ...searchProps.filter,
+                'mp-ID': event.target.value
+            }
+        })
+    }
+
+    const handleContainBlur = (isContain:boolean) => {
+        const tmp = isContain ? containValue.split(' ') : excludeValue.split(' ');
         const tmpArr:IElement[] = [];
         for(let i=0;i<tmp.length;i++) {
             const name = tmp[i].match(/[a-zA-Z]+/g)?.join('');
@@ -62,13 +92,23 @@ const SearchBar = () => {
                 });
             }
         }
-        setSearchProps({
-            ...searchProps,
-            filter: {
-                ...searchProps.filter,
-                elements: tmpArr
-            }
-        })
+        if(isContain) {
+            setSearchProps({
+                ...searchProps,
+                filter: {
+                    ...searchProps.filter,
+                    elements: tmpArr
+                }
+            })            
+        } else {
+            setSearchProps({
+                ...searchProps,
+                filter: {
+                    ...searchProps.filter,
+                    elementsExclude: tmpArr
+                }
+            })   
+        }
     }
 
     const handleSearch = async () => {
@@ -83,25 +123,22 @@ const SearchBar = () => {
                     <div>Compound Contains</div>
                     <div className="flex items-center">
                         <div>Only these elements</div>
-                        <Checkbox />
+                        <Checkbox value={only} onChange={handleOnly}/>
                     </div>
                 </div>
-                <TextField variant="outlined" size="small" fullWidth value={containValue} onChange={handleContainInput} onBlur={handleContainBlur}/>
+                <TextField variant="outlined" size="small" fullWidth value={containValue} onChange={handleContainInput} onBlur={() => handleContainBlur(true)}/>
             </div>
             <div className="lg:grow-2 w-full">
                 <div className="flex justify-between">
                     Exclude
                 </div>
-                <TextField variant="outlined" size="small" fullWidth />
+                <TextField variant="outlined" size="small" fullWidth value={excludeValue} onChange={handleExculdeInput} onBlur={() => handleContainBlur(false)} />
             </div>
             <div className="lg:grow-2 w-full">
                 <div className="flex justify-between">
                     mp-ID
                 </div>
-                <TextField variant="outlined" size="small" fullWidth onChange={(e) => {
-                    const tmp = {...searchProps};
-                    tmp.filter['mp-ID'] = e.target.value;
-                }}/>
+                <TextField variant="outlined" size="small" fullWidth onChange={handlempID}/>
             </div>
             <div className="lg:grow-2 w-full bg-blue-600 text-white rounded-md">
                 <Button variant="contained" fullWidth onClick={handleSearch}>Search</Button> 
