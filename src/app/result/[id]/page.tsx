@@ -37,16 +37,11 @@ const TopBar = () => {
                     with SOC
                 </div>
             </div>
-            <div className="flex justify-center space-x-6">
+            <div className="flex justify-center space-x-6 lg:text-lg text-sm">
                 <div>
                     <div>compound name</div>
                     <div className="font-bold">
                         {
-                            /*
-                            params.compound.map((item:{ name:string,number:number }) => {
-                                return `${item.name}${item.number}`
-                            }).join(' ')
-                            */
                            params.compound_name
                         }
                     </div>
@@ -69,21 +64,26 @@ const Container = () => {
     const params = JSON.parse(useSearchParams().getAll('data')[0]) as SearchResult;
 
     return (
-        <div className="flex flex-col space-y-6 px-20">
-            <div className="flex justify-between text-3xl">
+        <div className="flex flex-col space-y-6 lg:px-20">
+            <div className="flex lg:justify-between justify-between lg:text-3xl text-xl">
                 <div>Materials Data</div>
                 <div>mp-ID: {params['mp-ID']}</div>
             </div>
-            <div className="flex flex-col space-y-10">
+            <div className="flex-col space-y-10 hidden lg:flex">
                 <div className="flex justify-between">
                     <Crystallographic />
                     <LatticeStructure width={600} height={400} />
-                    <BrillouinZone />
                 </div>
                 <div className="flex justify-between">
-                    <BandStructure width={800} height={800} bandType={bandType.pam}/>
-                    <DensityStates width={800} height={800} />
+                    <BandStructure width={600} height={400} bandType={bandType.pam}/>
+                    <DensityStates width={600} height={400} />
                 </div>
+            </div>
+            <div className="lg:hidden flex flex-col space-y-6">
+                <Crystallographic />
+                <LatticeStructure width={400} height={400} />
+                <BandStructure width={300} height={400} bandType={bandType.pam}/>
+                <DensityStates width={400} height={400} />
             </div>
         </div>
     )

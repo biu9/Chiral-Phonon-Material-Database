@@ -90,48 +90,46 @@ export default function BandStructure({ width, height, bandType }: BandStructure
 
 
     return (
-        <div>
+        <div className="">
             <div className="text-xl">Band Structure</div>
-            <div>
-                <Stage
-                    width={width}
-                    height={height}
-                    onWheel={handleWheel}
-                >
-                    <Layer
-                        draggable
-                        onDragStart={handleDrag}
-                        onDragMove={handleDrag}
-                        onDragEnd={handleDrag}
-                        x={layerX}
-                        y={layerY}
-                        scaleX={layerScale}
-                        scaleY={layerScale}>
-                        <BandsRenderer data={processedData} />
-                        <Rect
-                            x={0}
-                            y={0}
-                            width={width}
-                            height={height}
-                            fill={"transparent"}
-                        />
-                    </Layer>
-                    <Layer>
-                        {
-                            axis?.render()
-                        }
-                    </Layer>
-                    <Layer>
-                        <Rect
-                            x={0}
-                            y={0}
-                            width={width * 0.1}
-                            height={height}
-                            fill={"white"}
-                        />
-                    </Layer>
-                </Stage>
-            </div>
+            <Stage
+                width={width}
+                height={height}
+                onWheel={handleWheel}
+            >
+                <Layer
+                    draggable
+                    onDragStart={handleDrag}
+                    onDragMove={handleDrag}
+                    onDragEnd={handleDrag}
+                    x={layerX}
+                    y={layerY}
+                    scaleX={layerScale}
+                    scaleY={layerScale}>
+                    <BandsRenderer data={processedData} />
+                    <Rect
+                        x={0}
+                        y={0}
+                        width={width}
+                        height={height}
+                        fill={"transparent"}
+                    />
+                </Layer>
+                <Layer>
+                    {
+                        axis?.render()
+                    }
+                </Layer>
+                <Layer>
+                    <Rect
+                        x={0}
+                        y={0}
+                        width={width * 0.1}
+                        height={height}
+                        fill={"white"}
+                    />
+                </Layer>
+            </Stage>
         </div>
     )
 }

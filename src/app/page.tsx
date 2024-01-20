@@ -10,7 +10,7 @@ import { useState,useEffect } from 'react';
 import { IElement } from '@/types';
 import { SearchPropsProvider,useSearchProps,useSearchPropsDispatch,useSearchResultsDispatch } from "../components/searchPropsContext";
 import { SearchResultTable } from "@/components/SearchResultTable";
-import { SearchResults,SearchProps } from "@/types";
+import { SearchResults,SearchProps,BriefSearchResult } from "@/types";
 import { POST } from "@/request";
 
 /**
@@ -46,7 +46,11 @@ const SearchBar = () => {
     useEffect(() => {
         setContainValue(translate(searchProps.filter.elements));
         setExcludeValue(translate(searchProps.filter.elementsExclude));
-    },[searchProps.filter.elements, searchProps.filter.elementsExclude])
+
+        (async() => {
+            const res = await POST<SearchProps,BriefSearchResult>('search/brief',searchProps)
+        })();
+    },[searchProps, searchProps.filter.elements, searchProps.filter.elementsExclude])
 
     const handleContainInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setContainValue(event.target.value);

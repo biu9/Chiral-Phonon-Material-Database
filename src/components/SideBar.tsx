@@ -153,13 +153,16 @@ export default function SideBar() {
         }
         <Divider />
         <List>
-          {['Search','Info'].map((text, index) => (
+          {['Search','About'].map((text, index) => (
             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
+                }}
+                onClick={() => {
+                  text === 'Search' ? router.push('/') : router.push('/about')
                 }}
               >
                 <ListItemIcon

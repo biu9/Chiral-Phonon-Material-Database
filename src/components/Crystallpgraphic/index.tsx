@@ -70,7 +70,7 @@ export function Crystallographic() {
 
   const TableItem = ({ text,value }:{ text:string,value:string }) => {
     return (
-      <div className="flex border-t-2 border-solid border-gray-400">
+      <div className="flex border-t-2 border-solid border-gray-400 lg:text-md text-xs">
         <div className="p-3 w-48 border-r-2 border-solid border-gray-400">
           {text}
         </div>

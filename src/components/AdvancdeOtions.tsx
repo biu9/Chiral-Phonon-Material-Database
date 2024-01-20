@@ -2,9 +2,12 @@
 import TextField from '@mui/material/TextField';
 import Slider from '@mui/material/Slider';
 import { useState } from 'react';
+import { useSearchProps,useSearchPropsDispatch } from './searchPropsContext';
 
 const MaterialsFilter = () => {
   const [value, setValue] = useState<number[]>([0, 100]);
+  const searchProps = useSearchProps();
+  const setSearchProps = useSearchPropsDispatch();
   const handleChange = (event: any, newValue: number | number[]) => {
     setValue(newValue as number[]);
   }

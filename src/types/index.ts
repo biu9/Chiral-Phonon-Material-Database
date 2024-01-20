@@ -79,3 +79,9 @@ export type materialResponse = {
     String: string,
     valid: boolean
 }
+
+export type BriefSearchResult = {
+    symmetry: number[],
+    type: string,
+    total: number
+}

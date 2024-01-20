@@ -34,8 +34,9 @@ export default function LatticeStructure({width, height}) {
         <div>Latitude Strucrute</div>
         <div className="border-grat-200 border-2">
             <canvas
-            ref={ref}
-            id="transformBallAndStick" style={{width: width, height: height}}
+              ref={ref}
+              id={"transformBallAndStick"+width} // id相同时会导致多次调用只有第一处调用处显示
+              style={{width: width, height: height}}
             />
         </div>
     </div>
