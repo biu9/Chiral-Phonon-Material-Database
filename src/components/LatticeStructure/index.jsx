@@ -1,7 +1,7 @@
 'use client'
 
 import {useEffect, useRef} from "react";
-import { ChemDoodle } from './ChemDoodleWeb.js'
+import { ChemDoodle } from "chemdoodle-next/src/ChemDoodleWeb.js"
 import { useSearchParams } from "next/navigation"
 import { useSOC } from "../MaterialPropsContext";
 
