@@ -9,6 +9,7 @@ npm run dev
 
 ### TODO
 
-1. advanced search
-2. 移动端适配
-3. loading动画
+- [ ] advanced search
+- [ ] about - 50%
+- [x] band structure state
+- [x] footer

@@ -4,11 +4,79 @@ import { processData } from "./processData";
 import { processAxis } from "./processAxis";
 import { Stage, Layer, Rect } from "react-konva";
 import Konva from "konva";
-import { BandStructureProps, SearchResult, materialResponse } from "@/types";
+import {
+  BandStructureProps,
+  SearchResult,
+  bandType,
+  materialResponse,
+} from "@/types";
 import { band } from "./processData";
 import { GET } from "@/request";
 import { useSearchParams } from "next/navigation";
 import { useSOC } from "../MaterialPropsContext";
+import { Button, Menu, MenuItem } from "@mui/material";
+
+interface BandMenuProps {
+  onSelect: (band: bandType) => void;
+  currBandType: bandType;
+}
+
+const BandMenu: React.FC<BandMenuProps> = ({ onSelect,currBandType }) => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleMenuItemClick = (band: bandType) => {
+    onSelect(band);
+    handleClose();
+  };
+
+  const bandTypeMap = {
+    2: "PAM",
+    3: "SXY",
+    4: "SYZ",
+    5: "SZX",
+  }
+
+  return (
+    <div>
+      <Button
+        id="band-menu-button"
+        aria-controls="band-menu"
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
+        {bandTypeMap[currBandType]}
+      </Button>
+      <Menu
+        id="band-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={() => handleMenuItemClick(bandType.pam)}>
+          PAM
+        </MenuItem>
+        <MenuItem onClick={() => handleMenuItemClick(bandType.sxy)}>
+          SXY
+        </MenuItem>
+        <MenuItem onClick={() => handleMenuItemClick(bandType.syz)}>
+          SYZ
+        </MenuItem>
+        <MenuItem onClick={() => handleMenuItemClick(bandType.szx)}>
+          SZX
+        </MenuItem>
+      </Menu>
+    </div>
+  );
+};
 
 const BandsRenderer = memo<{ data: band[] }>((props) => {
   return (
@@ -32,6 +100,7 @@ export default function BandStructure({
   const [layerScale, setLayerScale] = useState<number>(1);
   const [layerX, setLayerX] = useState<number>(0);
   const [layerY, setLayerY] = useState<number>(0);
+  const [currBandType, setCurrBandType] = useState<bandType>(bandType);
   const SOC = useSOC();
 
   const params = JSON.parse(
@@ -45,7 +114,7 @@ export default function BandStructure({
       );
       const [band, xs] = processData(
         res.data.String,
-        bandType,
+        currBandType,
         width,
         height,
         0.9
@@ -53,7 +122,7 @@ export default function BandStructure({
       setProcessedData(band);
       setXs(xs);
     })();
-  }, [bandType, width, height, params.uuid, SOC]);
+  }, [currBandType, width, height, params.uuid, SOC]);
 
   useEffect(() => {
     fetch("/mock/signals.txt")
@@ -102,7 +171,10 @@ export default function BandStructure({
 
   return (
     <div className="">
-      <div className="text-xl">Band Structure</div>
+      <div className="flex space-x-3 items-center mb-6">
+        <div className="text-xl">Band Structure</div>
+        <BandMenu onSelect={setCurrBandType} currBandType={currBandType}/>
+      </div>
       <Stage width={width} height={height} onWheel={handleWheel}>
         <Layer
           draggable

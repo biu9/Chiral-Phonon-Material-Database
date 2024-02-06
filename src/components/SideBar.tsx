@@ -102,7 +102,6 @@ const LoggedIcon = ({ user }:{ user:any }) => {
       <IconButton
         onClick={() => {
           GET('/api/signout')
-          // TODO: sync signout
         }}
       >
         <LockOpenIcon />
@@ -115,7 +114,7 @@ const LoggedIcon = ({ user }:{ user:any }) => {
 }
 
 export default function SideBar() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const [userInfo,setUserInfo] = React.useState<any>(); // TODO: type
 
   const router = useRouter();
