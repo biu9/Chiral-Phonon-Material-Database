@@ -102,5 +102,7 @@ export function processData(data:string,bandType:bandType,width:number,height:nu
     lineGroups = lineGroups.filter((group) => group.length > 0);
     const bands = lineGroups.map((group) => new band(group));
 
+    xs.push(yMin);
+    xs.push(yMax);
     return [bands, xs]
 }
