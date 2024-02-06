@@ -113,12 +113,15 @@ export default function BandStructure({ width, height, bandType }: BandStructure
                         width={width}
                         height={height}
                         fill={"transparent"}
-                    />
-                </Layer>
+                    />                </Layer>
                 <Layer>
-                    {
-                        axis?.render()
-                    }
+                    <Rect
+                        x={0}
+                        y={height*0.9}
+                        width={width}
+                        height={height*0.1}
+                        fill={"white"}
+                    />
                 </Layer>
                 <Layer>
                     <Rect
@@ -129,6 +132,20 @@ export default function BandStructure({ width, height, bandType }: BandStructure
                         fill={"white"}
                     />
                 </Layer>
+                <Layer>
+                    {
+                        axis?.render()
+                    }
+                </Layer>
+                {/*<Layer>*/}
+                {/*    <Rect*/}
+                {/*        x={0}*/}
+                {/*        y={0}*/}
+                {/*        width={width * 0.1}*/}
+                {/*        height={height}*/}
+                {/*        fill={"white"}*/}
+                {/*    />*/}
+                {/*</Layer>*/}
             </Stage>
         </div>
     )
