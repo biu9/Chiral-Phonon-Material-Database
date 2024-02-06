@@ -1,7 +1,8 @@
 'use client'
-import {Group, Text} from "react-konva";
+import {Group, Layer, Rect, Text} from "react-konva";
 
 import {line} from "./utils";
+import React from "react";
 
 class signal {
     x:number;
@@ -125,6 +126,20 @@ class axis {
                 {
                     this.lines.map((line) => line.render())
                 }
+                <Rect
+                    x={0}
+                    y={this.height * 0.9}
+                    width={this.width}
+                    height={this.height * 0.1}
+                    fill={"white"}
+                />
+                <Rect
+                    x={0}
+                    y={0}
+                    width={this.width * 0.1}
+                    height={this.height}
+                    fill={"white"}
+                />
                 {
                     this.signals.map((signal) => signal.render())
                 }
