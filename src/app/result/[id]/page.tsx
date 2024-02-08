@@ -76,14 +76,14 @@ const Container = () => {
                     <LatticeStructure width={600} height={400} />
                 </div>
                 <div className="flex justify-between">
-                    <BandStructure width={600} height={400} bandType={bandType.pam}/>
+                    <BandStructure width={600} height={400} bandType={bandType.pam} symmetry={params["symmetry"]}/>
                     <DensityStates width={600} height={400} />
                 </div>
             </div>
             <div className="lg:hidden flex flex-col space-y-6">
                 <Crystallographic />
                 <LatticeStructure width={400} height={400} />
-                <BandStructure width={300} height={400} bandType={bandType.pam}/>
+                <BandStructure width={300} height={400} bandType={bandType.pam} symmetry={params["symmetry"]}/>
                 <DensityStates width={400} height={400} />
             </div>
         </div>

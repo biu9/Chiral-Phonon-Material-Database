@@ -16,6 +16,7 @@ export interface BandStructureProps {
     width: number;
     height: number;
     bandType: bandType;
+    symmetry: number;
 }
 
 export interface SearchResults {
