@@ -20,17 +20,6 @@ const TableItem = ({ data }:{ data:SearchResult }) => {
 
   const router = useRouter();
 
-  const compundTranslate = (compound:{ name:string,number:number }[]):string => {
-    let res = '';
-    for(let i=0;i<compound.length;i++) {
-      res += compound[i].name;
-      res += compound[i].number;
-      res += ' ';
-    }
-
-    return res;
-  }
-
   const handleCompoundClick = () => {
     const params = new URLSearchParams();
     params.set('data',JSON.stringify(data));
@@ -64,9 +53,9 @@ export function SearchResultTable() {
   },[])
 
   const MAX_PAGE = useMemo(() => {
-    if(Math.ceil(searchResults.total / 20) <= 5)  return Math.ceil(searchResults.total / 20);
+    if(Math.ceil(searchResults.total / 20) <= 1)  return Math.ceil(searchResults.total / 20);
 
-    if(!isLogedIn)  return 5;
+    if(!isLogedIn)  return 1;
 
     return Math.ceil(searchResults.total / 20);
 
@@ -82,6 +71,7 @@ export function SearchResultTable() {
       ...searchProps,
       page: searchProps.page + 1 > MAX_PAGE ? MAX_PAGE : searchProps.page + 1
     }
+    if(!isLogedIn)  alert('Please login to see more results');
     setSearchProps(tmp)
     search(tmp);
   }

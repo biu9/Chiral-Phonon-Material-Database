@@ -49,7 +49,7 @@ const TopBar = () => {
                 </div>
                 <div>
                     <div>Symmetry Group</div>
-                    <div>{params.symmetry}</div>
+                    <div>{params.symmetry}({params.symmetry_name})</div>
                 </div>
                 <div>
                     <div>Topological Status (Type):</div>

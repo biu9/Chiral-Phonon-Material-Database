@@ -32,6 +32,7 @@ export interface SearchResult {
     }[],
     "mp-ID": string,
     symmetry: number,
+    symmetry_name: string,
     type: {
         chiral: 'chiral' | 'achiral',
     },
