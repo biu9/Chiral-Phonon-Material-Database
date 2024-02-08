@@ -8,10 +8,10 @@ import AdvancedOtions from "@/components/AdvancdeOtions";
 import { useRouter } from 'next/navigation';
 import { useState,useEffect } from 'react';
 import { IElement } from '@/types';
-import { SearchPropsProvider,useSearchProps,useSearchPropsDispatch,useSearchResultsDispatch } from "../components/searchPropsContext";
+import { SearchPropsProvider,useSearchProps,useSearchPropsDispatch,useSearchResultsDispatch,useAdvancedSymmetryDispatch } from "../components/searchPropsContext";
 import { SearchResultTable } from "@/components/SearchResultTable";
 import { SearchResults,SearchProps,BriefSearchResult } from "@/types";
-import { POST } from "@/request";
+import { POST,GET } from "@/request";
 
 /**
  * @description 将IElement[]形式的数组转化为'name1+number1 name2+number2'形式的字符串
@@ -43,12 +43,15 @@ const SearchBar = () => {
 
     const setSearchResults = useSearchResultsDispatch();
 
+    const setAdvancedSymmetry = useAdvancedSymmetryDispatch();
+
     useEffect(() => {
         setContainValue(translate(searchProps.filter.elements));
         setExcludeValue(translate(searchProps.filter.elementsExclude));
 
         (async() => {
             const res = await POST<SearchProps,BriefSearchResult>('search/brief',searchProps)
+            setAdvancedSymmetry(res.data.symmetry);
         })();
     },[searchProps, searchProps.filter.elements, searchProps.filter.elementsExclude])
 

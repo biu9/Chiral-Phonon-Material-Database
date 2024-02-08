@@ -3,6 +3,7 @@ import TextField from '@mui/material/TextField';
 import Slider from '@mui/material/Slider';
 import { useState } from 'react';
 import { useSearchProps,useSearchPropsDispatch } from './searchPropsContext';
+import AutoCompleteTextArea from './AutoCompleteTextArea';
 
 const MaterialsFilter = () => {
   const [value, setValue] = useState<number[]>([0, 100]);
@@ -25,9 +26,7 @@ const MaterialsFilter = () => {
       <div className="text-xl">Materials Filters</div>
       <div className='flex flex-col space-y-2'>
         <div>Symmetry Group</div>
-        <TextField variant="outlined" size="small" style={{
-          width: '30%'
-        }}/>
+        <AutoCompleteTextArea/>
       </div>
       <div>
         <div>No. of Elements</div>
@@ -38,11 +37,9 @@ const MaterialsFilter = () => {
             width:'70px',
           }}/>
           <Slider
-            getAriaLabel={() => 'Temperature range'}
             value={value}
             onChange={handleChange}
             valueLabelDisplay="auto"
-            
           />
           <TextField onChange={setRightValue} value={value[1]} variant="outlined" size="small" style={{
             width:'70px'

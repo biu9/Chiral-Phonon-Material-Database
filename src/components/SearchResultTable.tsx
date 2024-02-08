@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useState,useEffect, useMemo } from 'react';
 import { 
   useSearchResults,
   useSearchProps,
@@ -7,7 +7,7 @@ import {
   useSearchResultsDispatch,
 } from '@/components/searchPropsContext';
 import { SearchResults,SearchProps,SearchResult } from "@/types";
-import { POST } from '@/request';
+import { POST,GET } from '@/request';
 import { useRouter } from 'next/navigation';
 
 import FirstPageIcon from '@mui/icons-material/FirstPage';
@@ -54,6 +54,23 @@ export function SearchResultTable() {
   const setSearchResults = useSearchResultsDispatch();
   const searchResults = useSearchResults();
   const searchProps = useSearchProps();
+  const [isLogedIn, setIsLogedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    (async() => {
+      const loginVerify = await GET<{ isAuthenticated:boolean }>('/api/user')
+      setIsLogedIn(loginVerify.data.isAuthenticated);
+    })()
+  },[])
+
+  const MAX_PAGE = useMemo(() => {
+    if(Math.ceil(searchResults.total / 20) <= 5)  return Math.ceil(searchResults.total / 20);
+
+    if(!isLogedIn)  return 5;
+
+    return Math.ceil(searchResults.total / 20);
+
+  },[isLogedIn, searchResults.total]);
 
   const search = async (props:SearchProps) => {
     const res = await POST<SearchProps,SearchResults>('search/result',props);
@@ -63,7 +80,7 @@ export function SearchResultTable() {
   const handleNextPage = () => {
     const tmp = {
       ...searchProps,
-      page: searchProps.page + 1 > Math.ceil(searchResults.total / 20) ? Math.ceil(searchResults.total / 20) : searchProps.page + 1
+      page: searchProps.page + 1 > MAX_PAGE ? MAX_PAGE : searchProps.page + 1
     }
     setSearchProps(tmp)
     search(tmp);
