@@ -95,8 +95,8 @@ class axis {
         }
         const yRange = yMax - yMin;
         const yAxisInterval = this.calculateYAxisInterval(yMin, yMax);
-        const yMinRounded = Math.floor(yMin / yAxisInterval) * yAxisInterval;
-        const yMaxRounded = Math.ceil(yMax / yAxisInterval) * yAxisInterval;
+        const yMinRounded = Math.ceil(yMin / yAxisInterval) * yAxisInterval;
+        const yMaxRounded = Math.floor(yMax / yAxisInterval) * yAxisInterval;
         const yIntervalCount = (yMaxRounded - yMinRounded) / yAxisInterval;
         for (let i = 0; i <= yIntervalCount; i++) {
             const y = yMinRounded + i * yAxisInterval;
@@ -112,8 +112,8 @@ class axis {
 
     updateXs(px:number, py:number, xScale:number, yScale:number) {
         let xs = this.xs_inner.map(x => (x * xScale + px));
-        const yMin = this.yMin * yScale + py;
-        const yMax = this.yMax * yScale + py;
+        const yMin = (this.yMin - py) / yScale;
+        const yMax = (this.yMax - py) / yScale;
         this.process(xs, yMin, yMax);
     }
 

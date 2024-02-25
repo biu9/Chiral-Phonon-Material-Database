@@ -14,7 +14,7 @@ import { band } from "./processData";
 import { GET } from "@/request";
 import { useSearchParams } from "next/navigation";
 import { useSOC } from "../MaterialPropsContext";
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Button, CircularProgress, Menu, MenuItem } from "@mui/material";
 
 interface BandMenuProps {
   onSelect: (band: bandType) => void;
@@ -103,6 +103,7 @@ export default function BandStructure({
   const [layerY, setLayerY] = useState<number>(0);
   const [currBandType, setCurrBandType] = useState<bandType>(bandType);
   const SOC = useSOC();
+  const [loading, setLoading] = useState<boolean>(true);
 
   const params = JSON.parse(
     useSearchParams().getAll("data")[0]
@@ -122,6 +123,7 @@ export default function BandStructure({
       );
       setProcessedData(band);
       setXs(xs);
+      setLoading(false);
     })();
   }, [currBandType, width, height, params.uuid, SOC]);
 
@@ -153,9 +155,9 @@ export default function BandStructure({
     const newX = -(mousePointTo.x - pointPosition.x / newScale) * newScale;
     const newY = -(mousePointTo.y - pointPosition.y / newScale) * newScale;
     axis?.updateXs(newX, newY, newScale, newScale);
-    setLayerScale(newScale);
     setLayerX(newX);
     setLayerY(newY);
+    setLayerScale(newScale);
   };
 
   const handleDrag = (e: Konva.KonvaEventObject<DragEvent>) => {
@@ -170,48 +172,57 @@ export default function BandStructure({
     <div className="">
       <div className="flex space-x-3 items-center mb-6">
         <div className="text-xl">Band Structure</div>
-        <BandMenu onSelect={setCurrBandType} currBandType={currBandType}/>
+        <BandMenu onSelect={(band) => {
+          setCurrBandType(band);
+          setLoading(true);
+        }} currBandType={currBandType}/>
       </div>
-      <Stage width={width} height={height} onWheel={handleWheel}>
-        <Layer
-          draggable
-          onDragStart={handleDrag}
-          onDragMove={handleDrag}
-          onDragEnd={handleDrag}
-          x={layerX}
-          y={layerY}
-          scaleX={layerScale}
-          scaleY={layerScale}
-        >
-          <BandsRenderer data={processedData} />
-          <Rect
-            x={0}
-            y={0}
-            width={width}
-            height={height}
-            fill={"transparent"}
-          />
-        </Layer>
-        <Layer>
-          <Rect
-            x={0}
-            y={height * 0.9}
-            width={width}
-            height={height * 0.1}
-            fill={"white"}
-          />
-        </Layer>
-        <Layer>
-          <Rect
-            x={0}
-            y={0}
-            width={width * 0.1}
-            height={height}
-            fill={"white"}
-          />
-        </Layer>
-        <Layer>{axis?.render()}</Layer>
-      </Stage>
+      {
+        loading ? (
+            <CircularProgress />
+        ) : (
+            <Stage width={width} height={height} onWheel={handleWheel}>
+              <Layer
+                  draggable
+                  onDragStart={handleDrag}
+                  onDragMove={handleDrag}
+                  onDragEnd={handleDrag}
+                  x={layerX}
+                  y={layerY}
+                  scaleX={layerScale}
+                  scaleY={layerScale}
+              >
+                <BandsRenderer data={processedData} />
+                <Rect
+                    x={0}
+                    y={0}
+                    width={width}
+                    height={height}
+                    fill={"transparent"}
+                />
+              </Layer>
+              <Layer>
+                <Rect
+                    x={0}
+                    y={height * 0.9}
+                    width={width}
+                    height={height * 0.1}
+                    fill={"white"}
+                />
+              </Layer>
+              <Layer>
+                <Rect
+                    x={0}
+                    y={0}
+                    width={width * 0.1}
+                    height={height}
+                    fill={"white"}
+                />
+              </Layer>
+              <Layer>{axis?.render()}</Layer>
+            </Stage>
+        )
+      }
     </div>
   );
 }
