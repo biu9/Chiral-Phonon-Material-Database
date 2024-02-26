@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, memo } from "react";
+import React, { useState, useEffect, memo, useRef } from "react";
 import { processData } from "./processData";
 import { processAxis } from "./processAxis";
 import { Stage, Layer, Rect } from "react-konva";
@@ -14,8 +14,11 @@ import { band } from "./processData";
 import { GET } from "@/request";
 import { useSearchParams } from "next/navigation";
 import { useSOC } from "../MaterialPropsContext";
-import { Button, CircularProgress, Menu, MenuItem } from "@mui/material";
-
+import { Button, CircularProgress, IconButton, Menu, MenuItem } from "@mui/material";
+import SaveIcon from '@mui/icons-material/Save';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import ZoomOutIcon from '@mui/icons-material/ZoomOut';
+import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
 interface BandMenuProps {
   onSelect: (band: bandType) => void;
   currBandType: bandType;
@@ -104,6 +107,7 @@ export default function BandStructure({
   const [currBandType, setCurrBandType] = useState<bandType>(bandType);
   const SOC = useSOC();
   const [loading, setLoading] = useState<boolean>(true);
+  const StageRef = useRef<Konva.Stage>(null);
 
   const params = JSON.parse(
     useSearchParams().getAll("data")[0]
@@ -168,6 +172,30 @@ export default function BandStructure({
     setLayerY(newY);
   };
 
+  const onResetClick = () => {
+    setLayerX(0);
+    setLayerY(0);
+    setLayerScale(1);
+    axis?.updateXs(0, 0, 1, 1);
+  };
+
+  const onZoomInClick = () => {
+    setLayerScale(layerScale * 1.1);
+    axis?.updateXs(layerX, layerY, layerScale * 1.1, layerScale * 1.1);
+  };
+
+  const onZoomOutClick = () => {
+    setLayerScale(layerScale / 1.1);
+    axis?.updateXs(layerX, layerY, layerScale / 1.1, layerScale / 1.1);
+  };
+
+  const onSaveClick = () => {
+    const link = document.createElement("a");
+    link.download = "band_structure.png";
+    link.href = StageRef.current?.toDataURL() || "";
+    link.click();
+  };
+
   return (
     <div className="">
       <div className="flex space-x-3 items-center mb-6">
@@ -176,12 +204,16 @@ export default function BandStructure({
           setCurrBandType(band);
           setLoading(true);
         }} currBandType={currBandType}/>
+        <IconButton onClick={onZoomInClick}><ZoomInIcon/></IconButton>
+        <IconButton onClick={onZoomOutClick}><ZoomOutIcon/></IconButton>
+        <IconButton onClick={onResetClick}><SettingsBackupRestoreIcon/></IconButton>
+        <IconButton onClick={onSaveClick}><SaveIcon/></IconButton>
       </div>
       {
         loading ? (
             <CircularProgress />
         ) : (
-            <Stage width={width} height={height} onWheel={handleWheel}>
+            <Stage width={width} height={height} onWheel={handleWheel} ref={StageRef}>
               <Layer
                   draggable
                   onDragStart={handleDrag}
