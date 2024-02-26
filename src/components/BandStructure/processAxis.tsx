@@ -11,6 +11,9 @@ class signal {
     constructor(x:number, y:number, text:string) {
         this.x = x;
         this.y = y;
+        if (text == "Gamma") {
+            text = "Γ";
+        }
         this.text = text;
     }
     render() {
