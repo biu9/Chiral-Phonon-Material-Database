@@ -11,6 +11,9 @@ class signal {
     constructor(x:number, y:number, text:string) {
         this.x = x;
         this.y = y;
+        if (text == "Gamma") {
+            text = "Γ";
+        }
         this.text = text;
     }
     render() {
@@ -100,7 +103,7 @@ class axis {
         const yIntervalCount = (yMaxRounded - yMinRounded) / yAxisInterval;
         for (let i = 0; i <= yIntervalCount; i++) {
             const y = yMinRounded + i * yAxisInterval;
-            const yScaled = (y - yMin) / yRange * this.height * 0.9;
+            const yScaled = (yMax - y) / yRange * this.height * 0.9;
             this.lines.push(new line(this.width * 0.1, yScaled, this.width, yScaled, 0.2, 'gray'));
             this.signals.push(new signal(this.width * 0.05, yScaled, y.toFixed(2)));
         }
@@ -112,8 +115,9 @@ class axis {
 
     updateXs(px:number, py:number, xScale:number, yScale:number) {
         let xs = this.xs_inner.map(x => (x * xScale + px));
-        const yMin = (this.yMin - py) / yScale;
-        const yMax = (this.yMax - py) / yScale;
+        const tmp = this.height * 0.9 / (this.yMax - this.yMin);
+        const yMax = this.yMax - ((0 - py) / yScale) / tmp;
+        const yMin = this.yMax - (this.height * 0.9 - py) / yScale / tmp;
         this.process(xs, yMin, yMax);
     }
 
