@@ -14,6 +14,9 @@ import { MaterialProvider } from "@/components/MaterialPropsContext"
 import { useSOCDispatch,useSOC } from "@/components/MaterialPropsContext"
 import React from "react"
 
+import 'katex/dist/katex.min.css';
+import { InlineMath } from 'react-katex';
+
 const TopBar = () => {
 
     const router = useRouter();
@@ -35,7 +38,7 @@ const TopBar = () => {
                         onChange={(e) => setSOC(SOC === 1 ? 0 : 1)}
                         inputProps={{ 'aria-label': 'controlled' }}
                     />
-                    with SOC
+                    w/o NAC
                 </div>
             </div>
             <div className="flex justify-center space-x-6 lg:text-lg text-sm">
@@ -43,17 +46,21 @@ const TopBar = () => {
                     <div>compound name</div>
                     <div className="font-bold">
                         {
-                           params.compound_name
+                           params.compound.reduce((acc,cur) => acc + cur.name + cur.number + ' ', '')
                         }
                     </div>
                 </div>
                 <div>
                     <div>Symmetry Group</div>
-                    <div>{params.symmetry}({params.symmetry_name})</div>
+                    <div>{params.symmetry}(<InlineMath math={params.symmetry_name} />)</div>
                 </div>
                 <div>
-                    <div>Topological Status (Type):</div>
-                    <div>{params.type.chiral}</div>
+                    <div>chiral space group:</div>
+                    <div>{params.type.chiral === 'chiral' ? 'Yes' : 'No'}</div>
+                </div>
+                <div>
+                    <div>PAM group:</div>
+                    <div>{params.pam}</div>
                 </div>
             </div>
         </div>
@@ -76,14 +83,15 @@ const Container = () => {
                     <LatticeStructure width={600} height={400} />
                 </div>
                 <div className="flex justify-between">
-                    <BandStructure width={600} height={400} bandType={bandType.pam} symmetry={params["symmetry"]}/>
+                    <BandStructure width={400} height={400} bandType={bandType.pam} symmetry={params["symmetry"]} isOnlyPAM={true}/>
+                    <BandStructure width={400} height={400} bandType={bandType.pam} symmetry={params["symmetry"]} isOnlyPAM={false}/>
                     <DensityStates width={600} height={400} />
                 </div>
             </div>
             <div className="lg:hidden flex flex-col space-y-6">
                 <Crystallographic />
                 <LatticeStructure width={400} height={400} />
-                <BandStructure width={300} height={400} bandType={bandType.pam} symmetry={params["symmetry"]}/>
+                <BandStructure width={300} height={400} bandType={bandType.pam} symmetry={params["symmetry"]} isOnlyPAM={true}/>
                 <DensityStates width={400} height={400} />
             </div>
         </div>

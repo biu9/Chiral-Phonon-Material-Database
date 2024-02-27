@@ -17,6 +17,7 @@ export interface BandStructureProps {
     height: number;
     bandType: bandType;
     symmetry: number;
+    isOnlyPAM: boolean;
 }
 
 export interface SearchResults {

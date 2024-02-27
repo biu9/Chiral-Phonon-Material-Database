@@ -6,15 +6,18 @@ import { useSOC } from "../MaterialPropsContext";
 import { GET } from "@/request";
 import { materialResponse } from "@/types";
 
+import 'katex/dist/katex.min.css';
+import { InlineMath } from 'react-katex';
+
 const defaultData = [
   {
-    text: 'Cell Length A',
+    text: 'Cell Length a',
     value: '0'
   }, {
-    text: 'Cell Length B',
+    text: 'Cell Length b',
     value: '0'
   }, {
-    text: 'Cell Length C',
+    text: 'Cell Length c',
     value: '0'
   }, {
     text: 'Cell Angle α',
@@ -74,8 +77,9 @@ export function Crystallographic() {
         <div className="p-3 w-48 border-r-2 border-solid border-gray-400">
           {text}
         </div>
-        <div className="p-3 w-48">
+        <div className="p-3 w-48 flex items-center">
           {value}
+          <InlineMath math={"\\AA"} />
         </div>
       </div>
     )
@@ -91,6 +95,7 @@ export function Crystallographic() {
         })
       }
       </div>
+      <div>Download K-path, Download POSCAR...</div>
     </div>
   )
 }

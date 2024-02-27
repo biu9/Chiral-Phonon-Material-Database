@@ -19,12 +19,17 @@ import SaveIcon from '@mui/icons-material/Save';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import SettingsBackupRestoreIcon from '@mui/icons-material/SettingsBackupRestore';
+
+import Tooltip from '@mui/material/Tooltip';
+import HelpIcon from '@mui/icons-material/Help';
+
 interface BandMenuProps {
   onSelect: (band: bandType) => void;
   currBandType: bandType;
+  isOnlyPAM:boolean;
 }
 
-const BandMenu: React.FC<BandMenuProps> = ({ onSelect,currBandType }) => {
+const BandMenu: React.FC<BandMenuProps> = ({ onSelect,currBandType,isOnlyPAM }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -64,18 +69,17 @@ const BandMenu: React.FC<BandMenuProps> = ({ onSelect,currBandType }) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <MenuItem onClick={() => handleMenuItemClick(bandType.pam)}>
-          PAM
-        </MenuItem>
-        <MenuItem onClick={() => handleMenuItemClick(bandType.sxy)}>
-          SXY
-        </MenuItem>
-        <MenuItem onClick={() => handleMenuItemClick(bandType.syz)}>
-          SYZ
-        </MenuItem>
-        <MenuItem onClick={() => handleMenuItemClick(bandType.szx)}>
-          SZX
-        </MenuItem>
+        {
+          isOnlyPAM ? (
+            <MenuItem onClick={() => handleMenuItemClick(2)}>PAM</MenuItem>
+          ) : (
+            <>
+              <MenuItem onClick={() => handleMenuItemClick(3)}>SXY</MenuItem>
+              <MenuItem onClick={() => handleMenuItemClick(4)}>SYZ</MenuItem>
+              <MenuItem onClick={() => handleMenuItemClick(5)}>SZX</MenuItem>
+            </>
+          )
+        }
       </Menu>
     </div>
   );
@@ -96,7 +100,8 @@ export default function BandStructure({
   width,
   height,
   bandType,
-  symmetry
+  symmetry,
+  isOnlyPAM
 }: BandStructureProps) {
   const [processedData, setProcessedData] = useState<band[]>([]);
   const [xs, setXs] = useState<number[]>([]);
@@ -200,14 +205,23 @@ export default function BandStructure({
     <div className="">
       <div className="flex space-x-3 items-center mb-6">
         <div className="text-xl">Band Structure</div>
-        <BandMenu onSelect={(band) => {
-          setCurrBandType(band);
-          setLoading(true);
-        }} currBandType={currBandType}/>
+        <BandMenu 
+          onSelect={(band) => {
+            setCurrBandType(band);
+            setLoading(true);
+          }} 
+          currBandType={currBandType}
+          isOnlyPAM={isOnlyPAM}
+        />
         <IconButton onClick={onZoomInClick}><ZoomInIcon/></IconButton>
         <IconButton onClick={onZoomOutClick}><ZoomOutIcon/></IconButton>
         <IconButton onClick={onResetClick}><SettingsBackupRestoreIcon/></IconButton>
         <IconButton onClick={onSaveClick}><SaveIcon/></IconButton>
+        <Tooltip title="这是一个问号图标">
+          <IconButton>
+            <HelpIcon />
+          </IconButton>
+        </Tooltip>
       </div>
       {
         loading ? (
