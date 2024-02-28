@@ -4,6 +4,7 @@ import Slider from '@mui/material/Slider';
 import { useState } from 'react';
 import { useSearchProps,useSearchPropsDispatch } from './searchPropsContext';
 import AutoCompleteTextArea from './AutoCompleteTextArea';
+import { Switch } from '@mui/material';
 
 const MaterialsFilter = () => {
   const [value, setValue] = useState<number[]>([0, 100]);
@@ -45,6 +46,43 @@ const MaterialsFilter = () => {
             width:'70px'
           }}/>
         </div>
+      </div>
+      <div className="flex items-center">
+        <Switch
+          checked={searchProps.filter.types[0].chiral === 'chiral' ? true : false}
+          inputProps={{ 'aria-label': 'controlled' }}
+          onChange={(e) => {
+            setSearchProps({
+              ...searchProps,
+              filter: {
+                ...searchProps.filter,
+                types: [
+                  {
+                    chiral: e.target.checked ? 'chiral' : 'achiral',
+                  }
+                ]
+              }
+            })
+          
+          }}
+        />
+        chiral
+      </div>
+      <div className="flex items-center">
+        <Switch
+          checked={searchProps.filter.pam}
+          inputProps={{ 'aria-label': 'controlled' }}
+          onChange={(e) => {
+            setSearchProps({
+              ...searchProps,
+              filter: {
+                ...searchProps.filter,
+                pam: e.target.checked
+              }
+            })
+          }}
+        />
+        pam
       </div>
     </div>
   )

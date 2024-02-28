@@ -38,6 +38,7 @@ const TableItem = ({ data }:{ data:SearchResult }) => {
 
 export function SearchResultTable() {
   const [compundAsc,setCompoundAsc] = useState<boolean>(true);
+  const [symmetryAsc,setSymmetryAsc] = useState<boolean>(true);
 
   const setSearchProps = useSearchPropsDispatch();
   const setSearchResults = useSearchResultsDispatch();
@@ -120,7 +121,23 @@ export function SearchResultTable() {
               compundAsc ? '🔺 Compound' : '🔻 Compound'
             }
           </div>
-          <div className="w-80">Symmetry Group</div>
+          <div 
+            className="w-80 cursor-pointer"
+            onClick={() => {
+              const tmp = {
+                ...searchProps,
+                asc: !symmetryAsc,
+                ordered: 'symmetry_id'
+              };
+              setSearchProps(tmp);
+              search(tmp);
+              setSymmetryAsc(!symmetryAsc);
+            }}
+          >
+            {
+              symmetryAsc ? '🔺 Symmetry' : '🔻 Symmetry'
+            }
+          </div>
           <div className="flex-1"></div>
           <div className="w-80">Type</div>
         </div>

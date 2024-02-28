@@ -43,7 +43,7 @@ export default function ElementTable() {
         ...searchProps,
         filter: {
           ...searchProps.filter,
-          elements: [...containElements,{ name: name,number: 1 }]
+          elements: [...containElements,{ name: name,number: -1 }]
         }
       })
     } else {

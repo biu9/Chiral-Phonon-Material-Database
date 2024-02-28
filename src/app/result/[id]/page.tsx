@@ -15,7 +15,7 @@ import { useSOCDispatch,useSOC } from "@/components/MaterialPropsContext"
 import React from "react"
 
 import 'katex/dist/katex.min.css';
-import { InlineMath } from 'react-katex';
+import { InlineMath, BlockMath } from 'react-katex';
 
 const TopBar = () => {
 
@@ -58,9 +58,9 @@ const TopBar = () => {
                     <div>chiral space group:</div>
                     <div>{params.type.chiral === 'chiral' ? 'Yes' : 'No'}</div>
                 </div>
-                <div>
+                <div className="flex flex-col">
                     <div>PAM group:</div>
-                    <div>{params.pam}</div>
+                    <div>{JSON.stringify(params.pam)}</div>
                 </div>
             </div>
         </div>

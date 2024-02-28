@@ -7,7 +7,9 @@ const defaultSearchProps:SearchProps = {
       elementsExclude: [],
       precisely: false,
       "mp-ID": '',
-      types: [],
+      types: [{
+        chiral: 'chiral'
+      }],
       pam: false
   },
   page: 1,

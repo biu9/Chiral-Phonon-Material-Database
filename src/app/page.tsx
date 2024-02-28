@@ -21,7 +21,7 @@ function translate(containElements:IElement[]):string {
 
     for(let i=0;i<containElements.length;i++) {
         res += containElements[i].name;
-        if(containElements[i].number !== 1) {
+        if(containElements[i].number !== -1) {
             res += containElements[i].number;
         }
         if(i !== containElements.length - 1)
@@ -95,7 +95,7 @@ const SearchBar = () => {
             if(name) {
                 tmpArr.push({
                     name: name,
-                    number: number ? parseInt(number) : 1
+                    number: number ? parseInt(number) : -1
                 });
             }
         }
