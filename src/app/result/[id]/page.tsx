@@ -15,7 +15,7 @@ import { useSOCDispatch,useSOC } from "@/components/MaterialPropsContext"
 import React from "react"
 
 import 'katex/dist/katex.min.css';
-import { InlineMath, BlockMath } from 'react-katex';
+import { InlineMath } from 'react-katex';
 
 const TopBar = () => {
 

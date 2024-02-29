@@ -7,10 +7,12 @@ const defaultSearchProps:SearchProps = {
       elementsExclude: [],
       precisely: false,
       "mp-ID": '',
-      types: [{
-        chiral: 'chiral'
-      }],
-      pam: false
+      type: 'chiral',
+      pam: false,
+      atom_num_max: 0,
+      atom_num_min: 0,
+      element_num_max: 0,
+      element_num_min: 0
   },
   page: 1,
   ordered: 'compoundname',

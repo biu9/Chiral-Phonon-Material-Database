@@ -54,10 +54,12 @@ export interface SearchProps {
         precisely: boolean,
         "mp-ID": string,
         symmetry?: number[],
-        types: {
-            chiral: 'chiral' | 'achiral',
-        }[],
-        pam: boolean
+        type: 'chiral' | 'achiral',
+        pam: boolean,
+        atom_num_min: number,
+        element_num_min: number,
+        element_num_max: number,
+        atom_num_max: number,
     },
     page: number,
     ordered: string,
