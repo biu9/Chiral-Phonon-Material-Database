@@ -204,7 +204,7 @@ export default function BandStructure({
   return (
     <div className="">
       <div className="flex space-x-3 items-center mb-6">
-        <div className="text-xl">Band Structure</div>
+        <div className="text-xl"> {currBandType !== 2 ? "Chrality" : "Band Structure"}</div>
         <BandMenu 
           onSelect={(band) => {
             setCurrBandType(band);

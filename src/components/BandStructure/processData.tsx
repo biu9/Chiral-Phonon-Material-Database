@@ -59,9 +59,14 @@ export function processData(data:string,bandType:bandType,width:number,height:nu
         } else if(chirality < -1e-5) {
             color = 'blue';
         } else {
-            chirality = 0.2;
+            if (bandType === 2) {
+                chirality = 0.5;
+            } else {
+                chirality = 1e-5;
+            }
         }
-        points.push([x, y, Math.min(Math.max(chirality * 5, 0.5), 2), color]);
+        chirality = Math.abs(chirality)
+        points.push([x, y, Math.min(Math.max(chirality * 20, 0.5), 2) * 0.5, color]);
     }
 
     const xSlice = points.map(point => point[0]);

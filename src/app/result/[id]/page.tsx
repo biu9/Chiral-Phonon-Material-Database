@@ -55,12 +55,12 @@ const TopBar = () => {
                     <div>{params.symmetry}(<InlineMath math={params.symmetry_name} />)</div>
                 </div>
                 <div>
-                    <div>chiral space group:</div>
+                    <div>chiral sg ?</div>
                     <div>{params.type.chiral === 'chiral' ? 'Yes' : 'No'}</div>
                 </div>
                 <div className="flex flex-col">
-                    <div>PAM group:</div>
-                    <div>{JSON.stringify(params.pam)}</div>
+                    <div>PAM ?</div>
+                    <div>{JSON.stringify(params.pam) === 'true' ? 'Yes' : 'No'}</div>
                 </div>
             </div>
         </div>

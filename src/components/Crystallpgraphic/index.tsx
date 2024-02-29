@@ -79,7 +79,7 @@ export function Crystallographic() {
         </div>
         <div className="p-3 w-48 flex items-center">
           {value}
-          <InlineMath math={"\\AA"} />
+          <InlineMath math={"\\text{\\AA}"} />
         </div>
       </div>
     )
