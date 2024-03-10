@@ -73,7 +73,7 @@ export default function Upload() {
         </button>
         <div className="flex justify-center space-x-3">
           <input type="checkbox" onChange={() => setSoc(!soc)}/>
-          <div>with soc</div>
+          <div>NAC</div>
         </div>
       </div>
     </div>

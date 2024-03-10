@@ -20,10 +20,7 @@ export async function GET(req: NextRequest) {
   });
   
   // Cleanup params and redirect to homepage
-  const url = req.nextUrl.clone();
-  url.searchParams.delete('code');
-  url.pathname = '/';
-
+  const url = process.env.NODE_ENV === 'production' ? 'https://materialsfingerprint.com/' : 'http://localhost:3000/';
   const response = NextResponse.redirect(url);
 
   const role = user.email === adminEmail ? 'admin' : 'user';
