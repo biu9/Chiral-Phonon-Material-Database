@@ -1,6 +1,9 @@
 'use client'
 import TextField from '@mui/material/TextField';
 import Slider from '@mui/material/Slider';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { useState } from 'react';
 import { useSearchProps,useSearchPropsDispatch } from './searchPropsContext';
 import AutoCompleteTextArea from './AutoCompleteTextArea';
@@ -9,6 +12,8 @@ import { Switch } from '@mui/material';
 const MaterialsFilter = () => {
   const [elementValue, setElementValue] = useState<number[]>([0, 174]);
   const [atomValue, setAtomValue] = useState<number[]>([1, 7]);
+  const [chiralAndAchiral, setChiralAndAchiral] = useState<boolean>(true);
+  const [pamAndNonPam, setPamAndNonPam] = useState<boolean>(true);
   const searchProps = useSearchProps();
   const setSearchProps = useSearchPropsDispatch();
   const handleChange = (event: Event, newValue: number | number[]) => {
@@ -131,8 +136,21 @@ const MaterialsFilter = () => {
         </div>
       </div>
       <div className="flex items-center">
+        <FormGroup>
+          <FormControlLabel control={<Checkbox defaultChecked />} label="Both" onChange={(e) => {
+            setChiralAndAchiral(false);
+            setPamAndNonPam(false);
+            setSearchProps({
+              ...searchProps,
+              filter: {
+                ...searchProps.filter,
+                type: undefined
+              }
+            })
+          }}/>
+        </FormGroup>
         <Switch
-          checked={searchProps.filter.type === 'chiral' ? true : false}
+          checked={pamAndNonPam ? false : chiralAndAchiral ? false : searchProps.filter.type === 'chiral' ? true : false}
           inputProps={{ 'aria-label': 'controlled' }}
           onChange={(e) => {
             setSearchProps({
@@ -148,6 +166,19 @@ const MaterialsFilter = () => {
         chiral
       </div>
       <div className="flex items-center">
+        <FormGroup>
+          <FormControlLabel control={<Checkbox defaultChecked />} label="Both" onChange={(e) => {
+            setChiralAndAchiral(false);
+            setPamAndNonPam(false);
+            setSearchProps({
+              ...searchProps,
+              filter: {
+                ...searchProps.filter,
+                pam: undefined
+              }
+            })
+          }}/>
+        </FormGroup>
         <Switch
           checked={searchProps.filter.pam}
           inputProps={{ 'aria-label': 'controlled' }}
@@ -171,9 +202,7 @@ export default function AdvancedOtions() {
   return (
     <div className="p-6">
         <div className="font-bold text-2xl">Advanced Search</div>
-        <div>
-          <MaterialsFilter />
-        </div>
+        <MaterialsFilter />
     </div>
   )
 }

@@ -83,7 +83,7 @@ const Container = () => {
                     <LatticeStructure width={600} height={400} />
                 </div>
                 <div className="flex justify-between">
-                    <BandStructure width={400} height={400} bandType={bandType.pam} symmetry={params["symmetry"]} isOnlyPAM={true}/>
+                    <BandStructure width={400} height={400} bandType={bandType.sxy} symmetry={params["symmetry"]} isOnlyPAM={true}/>
                     <BandStructure width={400} height={400} bandType={bandType.pam} symmetry={params["symmetry"]} isOnlyPAM={false}/>
                     <DensityStates width={600} height={400} />
                 </div>
